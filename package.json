@@ -1,0 +1,37 @@
+{
+    "name": "nuxt-app",
+    "private": true,
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "deploy": "nuxt build && vercel deploy --prebuilt --prod",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare"
+    },
+    "devDependencies": {
+        "@nuxtjs/supabase": "^1.0.2",
+        "@types/jsonwebtoken": "^9.0.2",
+        "@types/node": "^18.17.3",
+        "@unocss/nuxt": "^0.55.2",
+        "@unocss/reset": "^0.55.2",
+        "@unocss/transformer-directives": "^0.55.2",
+        "@vueuse/core": "^10.3.0",
+        "drizzle-kit": "^0.19.13",
+        "nuxt": "^3.7.0",
+        "nuxt-icon": "^0.5.0"
+    },
+    "dependencies": {
+        "@planetscale/database": "^1.11.0",
+        "@popperjs/core": "^2.11.8",
+        "cryptr": "^6.3.0",
+        "dayjs": "^1.11.9",
+        "drizzle-orm": "^0.28.3",
+        "jose": "^4.14.6",
+        "jsonwebtoken": "^9.0.2",
+        "nanoid": "^4.0.2",
+        "puppeteer": "^21.1.0",
+        "swiper": "^10.2.0",
+        "v-calendar": "^3.0.3"
+    }
+}

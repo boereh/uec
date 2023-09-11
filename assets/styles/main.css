@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Noto+Serif:wght@700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    @apply bg-light-50 text-dark-900 overflow-x-hidden;
+}
+
+.dark body {
+    @apply bg-dark-900 text-light-50;
+}
+
+.noto-serif {
+    font-family: 'Noto Serif', serif;
+}
+
+h1 {
+    @apply text-4xl fontbold my-4;
+}
+
+h2 {
+    @apply text-3xl my-4;
+}
+
+h3 {
+    @apply text-2xl font-bold my-4;
+}
+
+h4 {
+    @apply text-xl my-4;
+}
+
+h5 {
+    @apply text-lg font-bold my-4;
+}
+
+h5 {
+    @apply text-md my-4;
+}
+
+p {
+    @apply mb-2;
+}
+
+a.link {
+    @apply text-brand-red hover:underline;
+}
+
+.fill-container {
+    height: calc(100dvh - 6rem - 1px);
+}
+
+hr {
+    @apply my-12 border-light-700 dark:border-dark-50 border-dashed;
+}
+
+.bg-brand-red-grad {
+    background: rgb(233, 0, 0);
+    background: radial-gradient(
+        circle,
+        rgba(233, 0, 0, 1) 0%,
+        rgba(59, 0, 0, 1) 100%
+    );
+}
