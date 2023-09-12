@@ -16,8 +16,6 @@ const emit = defineEmits([
     'clicked:iconLeft',
 ])
 
-console.log(props)
-
 function Updated(target: EventTarget | null) {
     if (!target) return
 

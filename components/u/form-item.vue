@@ -25,7 +25,6 @@ watchEffect(() => {
 
             if (!res) continue
             if (typeof res === 'string') {
-                console.log(res)
 
                 messages.value.push(res)
 
