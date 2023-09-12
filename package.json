@@ -7,7 +7,8 @@
         "deploy": "nuxt build && vercel deploy --prebuilt --prod",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
-        "postinstall": "nuxt prepare"
+        "postinstall": "nuxt prepare",
+        "tunnel": "ngrok http --domain=sailfish-willing-mule.ngrok-free.app 3000"
     },
     "devDependencies": {
         "@nuxtjs/supabase": "^1.0.2",
