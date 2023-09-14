@@ -30,6 +30,7 @@ export default defineNuxtConfig({
 				'/loyalty-rewards',
 				'/loyalty-terms',
 				'/privacy',
+				'/search',
 				'/theatres',
 			],
 			callback: '/confirm',

@@ -33,6 +33,7 @@ const breadcrumbs = useState<string[]>('useBreadcrumbs', () => [])
 const drawerEnabled = ref(false)
 const { height } = useWindowSize()
 const user = useSupabaseUser()
+const search = ref('')
 
 useHead({
 	htmlAttrs: {
@@ -145,9 +146,10 @@ useHead({
 					</span>
 
 					<u-input
-						placeholder="Search for movies"
+						v-model:value="search"
+						placeholder="Search..."
 						icon-right="fluent:search-16-filled"
-						@submit="console.log($event)"
+						@click:icon-right="$router.push(`/search?q=${search}`)"
 					/>
 				</div>
 

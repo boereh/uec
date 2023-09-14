@@ -19,12 +19,13 @@
         "@unocss/transformer-directives": "^0.55.2",
         "@vueuse/core": "^10.3.0",
         "drizzle-kit": "^0.19.13",
-        "nuxt": "^3.7.0",
+        "nuxt": "^3.7.3",
         "nuxt-icon": "^0.5.0"
     },
     "dependencies": {
         "@planetscale/database": "^1.11.0",
         "@popperjs/core": "^2.11.8",
+        "@vueuse/router": "^10.4.1",
         "cryptr": "^6.3.0",
         "dayjs": "^1.11.9",
         "drizzle-orm": "^0.28.3",

@@ -34,7 +34,7 @@ h5 {
 	@apply text-lg font-bold my-4;
 }
 
-h5 {
+h6 {
 	@apply text-md my-4;
 }
 
@@ -56,11 +56,7 @@ hr {
 
 .bg-brand-red-grad {
 	background: rgb(233, 0, 0);
-	background: radial-gradient(
-		circle,
-		#e90000 0%,
-		#3b0000 100%
-	);
+	background: radial-gradient(circle, #e90000 0%, #3b0000 100%);
 }
 
 ul {
@@ -69,4 +65,8 @@ ul {
 
 ul > li {
 	@apply mb-2;
+}
+
+highlight {
+	@apply bg-yellow/50;
 }
