@@ -20,7 +20,8 @@
         "@vueuse/core": "^10.3.0",
         "drizzle-kit": "^0.19.13",
         "nuxt": "^3.7.3",
-        "nuxt-icon": "^0.5.0"
+        "nuxt-icon": "^0.5.0",
+        "vercel": "^32.2.5"
     },
     "dependencies": {
         "@planetscale/database": "^1.11.0",
