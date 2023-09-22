@@ -137,7 +137,7 @@ watchDebounced(
 <template>
 	<u-container>
 		<div :style="{ minHeight: `calc(${height}px + 2rem)` }">
-			<div class="flex justify-center md:float-left md:mb-8 md:mr-8">
+			<div class="flex justify-center md:float-left mb-8 md:mr-8">
 				<img
 					ref="posterEl"
 					class="min-w-xs max-w-xs aspect-intial"
@@ -146,12 +146,12 @@ watchDebounced(
 				/>
 			</div>
 
-			<div class="flex <md:flex-col gap-4 items-center justify-between">
-				<div class="flex gap-4 items-center">
+			<div class="flex <md:flex-col gap-4 items-start justify-between">
+				<div class="flex gap-4 items-start">
 					<h1 class="m-0">{{ movie?.title }}</h1>
 
 					<span
-						class="noto-serif text-white bg-black dark:bg-white dark:text-black font-bold px-1 rounded select-none whitespace-nowrap"
+						class="noto-serif text-white bg-black dark:bg-white dark:text-black font-bold px-1 rounded select-none whitespace-nowrap mt-2 <sm:mt-3"
 					>
 						{{ movie?.mpaa }}
 					</span>
@@ -190,17 +190,17 @@ watchDebounced(
 			<p>{{ movie?.description }}</p>
 		</div>
 
-		<div class="block">
-			<h2>Get tickets for {{ movie?.title }}</h2>
+		<br />
 
-			<br />
+		<h2>Get tickets for {{ movie?.title }}</h2>
 
-			<div
-				id="showings"
-				class="border border-dark-500 p-4 sm:p-8 min-h-xs"
-			>
-				{{ showings.date }}
-			</div>
+		<br />
+
+		<div
+			id="showings"
+			class="border border-dark-500 p-4 sm:p-8 min-h-xs"
+		>
+			{{ showings.date }}
 		</div>
 	</u-container>
 
