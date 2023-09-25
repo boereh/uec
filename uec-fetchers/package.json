@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "scripts": {
+    "prepare": "nitropack prepare",
+    "dev": "nitropack dev",
+    "build": "nitropack build && cd .output/server",
+    "preview": "node .output/server/index.mjs"
+  },
+  "dependencies": {
+    "@planetscale/database": "^1.11.0",
+    "drizzle-orm": "^0.28.6",
+    "jsdom": "^22.1.0",
+    "nitropack": "latest"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.3"
+  }
+}

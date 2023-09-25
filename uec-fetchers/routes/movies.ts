@@ -1,116 +1,106 @@
-import puppeteer from "puppeteer";
-import { moviesSchema } from "../utils/database.schema";
-import { drizzle } from "../utils/database";
-import { Movie } from "../../assets/scripts/types/movies";
+import { JSDOM } from 'jsdom'
+import { moviesSchema } from '../../server/utils/database.schema'
+import { drizzle } from '../../server/utils/database'
+import { Movie } from '../../assets/scripts/types/movies'
+
+type FetchMovieDataArg = {
+	title: string
+	id: number
+	poster: string
+	special: boolean
+}
+
+async function FetchMovieData(movie: FetchMovieDataArg): Promise<Movie> {
+	console.log('doing', movie.title)
+
+	const contents = await $fetch<string>(`https://www.uecmovies.com/movies/details/${movie.id}`)
+	const dom = new JSDOM(contents)
+
+	const description = dom.window.document.querySelector<HTMLAnchorElement>('#movie-details p.movie-synopsis').innerHTML
+
+	const genre = dom.window.document
+		.querySelector<HTMLSpanElement>('.movie-info-field')
+		.innerHTML.split(',')
+		.map((x) => x.trim())
+
+	let released = dom.window.document
+		.querySelector<HTMLSpanElement>('.movie-info-field:nth-of-type(2)')
+		.innerHTML.split(' ')
+		.slice(2)
+		.map((x) => x.trim())
+		.join(' ')
+		.trim()
+
+	const mpaa = dom.window.document.querySelector<HTMLSpanElement>('#movie-details div.movie-info > span:nth-of-type(3)').innerHTML.split(' ')[2].trim()
+
+	const runtime = Number(dom.window.document.querySelector<HTMLSpanElement>('#movie-details div.movie-info > span:nth-of-type(4)').innerHTML.split(' ')[1])
+
+	const director = dom.window.document
+		.querySelector<HTMLSpanElement>('#movie-details div.movie-info:nth-of-type(2) > span')
+		.innerHTML.slice(9)
+		.split(',')
+		.map((x) => x.trim())
+
+	const actors = dom.window.document
+		.querySelector<HTMLSpanElement>('#movie-details div.movie-info:nth-of-type(3) > span')
+		.innerHTML.slice(7)
+		.split(',')
+		.map((x) => x.trim())
+
+	let youtube = null
+
+	try {
+		youtube = dom.window.document.querySelector<HTMLIFrameElement>('#movie-details div.videoSlide > iframe').src
+	} catch (error) {}
+
+	return {
+		...movie,
+		released,
+		genre,
+		description,
+		director,
+		mpaa,
+		actors,
+		youtube,
+		runtime,
+	}
+}
 
 export default defineEventHandler(async () => {
-  const browser = await puppeteer.launch({ headless: "new" });
-  const page = await browser.newPage();
-  const movies: Movie[] = [];
+	for (const url of ['nowplaying', 'comingsoon', 'specialevents']) {
+		const contents = await $fetch<string>(`https://www.uecmovies.com/movies/${url}`)
+		const dom = new JSDOM(contents)
+		const list = dom.window.document.querySelectorAll('a')
 
-  let moviesToProcess: Movie[] = [];
+		for (const item of list) {
+			const movie = await FetchMovieData({
+				title: item.getAttribute('title') || '',
+				id: Number(item.href.split('/').at(-1)),
+				poster: item.querySelector('img')?.src || '',
+				special: url === 'specialevents',
+			})
 
-  for (const url of ["nowplaying", "comingsoon", "specialevents"]) {
-    await page.goto(`https://www.uecmovies.com/movies/${url}`);
+			await drizzle
+				.insert(moviesSchema)
+				.ignore()
+				.values({
+					id: movie.id,
+					title: movie.title,
+					description: movie.description,
+					genre: movie.genre,
+					director: movie.director,
+					actors: movie.actors,
+					mpaa: movie.mpaa,
+					runtime: movie.runtime,
+					released: new Date(movie.released),
+					special: movie.special,
+					youtube: movie.youtube || '',
+					poster: movie.poster,
+				})
 
-    const urlMovies = (await page.$$eval(
-      "a",
-      (els, url) => {
-        return [...els].map((el) => ({
-          title: el.getAttribute("title") || "",
-          id: Number(el.href.split("/").at(-1)),
-          poster: el.querySelector("img")?.src || "",
-          special: url === "specialevents",
-        }));
-      },
-      url
-    )) as Movie[];
+			console.log('done', movie.title)
+		}
+	}
 
-    moviesToProcess = [...moviesToProcess, ...urlMovies];
-  }
-
-  for (const movie of moviesToProcess) {
-    if (!!movies.find((x) => x.id === movie.id)) continue;
-    console.log("doing ", movie.title);
-
-    await page.goto(`https://www.uecmovies.com/movies/details/${movie.id}`);
-
-    movie.description = await page.$eval(
-      "#movie-details p.movie-synopsis",
-      (x) => x.innerText
-    );
-
-    movie.genre = await page.$eval(
-      "#movie-details div.movie-info > span:nth-of-type(1)",
-      (el) => el.innerText.split(",").map((x) => x.trim())
-    );
-
-    movie.released = await page.$eval(
-      "#movie-details div.movie-info > span:nth-of-type(2)",
-      (el) =>
-        el.innerText
-          .split(" ")
-          .slice(2)
-          .map((x) => x.trim())
-          .join(" ")
-          .trim()
-    );
-
-    movie.mpaa = await page.$eval(
-      "#movie-details div.movie-info > span:nth-of-type(3)",
-      (el) => el.innerText.split(" ")[2].trim()
-    );
-
-    movie.runtime = await page.$eval(
-      "#movie-details div.movie-info > span:nth-of-type(4)",
-      (el) => Number(el.innerText.split(" ")[1])
-    );
-
-    movie.director = await page.$eval(
-      "#movie-details div.movie-info:nth-of-type(2) > span",
-      (el) =>
-        el.innerText
-          .slice(9)
-          .split(",")
-          .map((x) => x.trim())
-    );
-
-    movie.actors = await page.$eval(
-      "#movie-details div.movie-info:nth-of-type(3) > span",
-      (el) =>
-        el.innerText
-          .slice(7)
-          .split(",")
-          .map((x) => x.trim())
-    );
-
-    try {
-      movie.youtube = await page.$eval(
-        "#movie-details div.videoSlide > iframe",
-        (el) => el.src
-      );
-    } catch (error) {}
-
-    await drizzle
-      .insert(moviesSchema)
-      .ignore()
-      .values({
-        id: movie.id,
-        title: movie.title,
-        description: movie.description,
-        genre: movie.genre,
-        director: movie.director,
-        actors: movie.actors,
-        mpaa: movie.mpaa,
-        runtime: movie.runtime,
-        released: new Date(movie.released),
-        special: movie.special,
-        youtube: movie.youtube || "",
-        poster: movie.poster,
-      });
-
-    console.log("done", movie.title);
-  }
-
-  browser.close();
-});
+	console.log('finished')
+})

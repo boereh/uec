@@ -26,6 +26,7 @@
     "dependencies": {
         "@planetscale/database": "^1.11.0",
         "@popperjs/core": "^2.11.8",
+        "@vercel/edge-config": "^0.4.1",
         "@vueuse/router": "^10.4.1",
         "cryptr": "^6.3.0",
         "dayjs": "^1.11.10",

@@ -1,119 +1,78 @@
-import puppeteer from "puppeteer";
-import { showingSchema } from "../utils/database.schema";
-import { drizzle } from "../utils/database";
-import theatres from "../../assets/json/theatres.json";
+import { JSDOM } from 'jsdom'
+import { showingSchema } from '../../server/utils/database.schema'
+import { drizzle } from '../../server/utils/database'
+import theatres from '../../assets/json/theatres.json'
 
 type Showing = {
-  movie_id: number;
-  theatre_id: number;
-  time: string;
-  date: Date;
-};
+	movie_id: number
+	theatre_id: number
+	time: number
+	date: Date
+}
+
+function ShowingExists(arr: Showing[], showing: Showing) {
+	return (
+		arr.findIndex((x) => {
+			const date = new Date(showing.date).toDateString() !== new Date(x.date).toDateString()
+			const movie_id = showing.movie_id === x.movie_id
+			const theatre_id = showing.theatre_id === x.theatre_id
+			const time = showing.time === x.time
+
+			return date && movie_id && theatre_id && time
+		}) >= 0
+	)
+}
 
 export default defineEventHandler(async () => {
-  const browser = await puppeteer.launch({ headless: "new" });
+	const showings: Showing[] = await drizzle.select().from(showingSchema)
 
-  let searches: any[] = [];
+	for (const theatre of theatres) {
+		console.log('doing ', theatre.name)
 
-  for (const theatre of theatres) {
-    if (searches.length > 0) {
-      await Promise.all(searches);
+		const url = `https://www.uecmovies.com/theatres/details/${theatre.id}`
+		const dom = new JSDOM(await $fetch<string>(url))
+		const dates = dom.window.document.querySelectorAll<HTMLOptionElement>('select#showdate > option')
+		let inserted = 0
 
-      searches = [];
-    }
+		for (const date of dates) {
+			const datedom = new JSDOM(await $fetch<string>(`${url}?showdate=${date}`))
+			const LiElements = datedom.window.document.querySelectorAll<HTMLLIElement>('#now-playing > li')
 
-    const showings = await search(browser, theatre);
+			for (const el of LiElements) {
+				const times = el.querySelectorAll<HTMLSpanElement>('.auditoriumStyleShowtimes > span')
+				const movie_id = Number(el.querySelector<HTMLAnchorElement>('.movieTimes > .movieTimesLeft > a').href.split('/').at(-1))
 
-    const showingsFromDB = await drizzle.select().from(showingSchema);
+				for (let time of times) {
+					time = time.querySelector('span') || time
 
-    for (const x of showingsFromDB) {
-      const xDate = new Date(x.date).toDateString();
+					const [t, halve] = time.innerHTML.split(' ')
 
-      const index = showings.findIndex((showing) => {
-        if (new Date(showing.date).toDateString() !== xDate) return false;
-        if (showing.movie_id !== Number(x.movie_id)) return false;
-        if (showing.theatre_id !== Number(x.theatre_id)) return false;
-        if (Number(showing.time) !== x.time) return false;
+					const [hour, minute] = t.split(':')
 
-        return true;
-      });
+					const hoursToAdd = halve === 'PM' ? 12 : 0
+					const hours = 60 * (Number(hour) + hoursToAdd)
 
-      if (index >= 0) return true;
+					const timestamp = 60000 * (Number(minute) + hours)
 
-      await drizzle
-        .insert(showingSchema)
-        .ignore()
-        .values({
-          movie_id: Number(x.movie_id),
-          theatre_id: Number(x.theatre_id),
-          time: Number(x.time),
-          date: new Date(x.date),
-        });
-    }
+					const showing = {
+						movie_id,
+						theatre_id: parseInt(theatre.id),
+						date: new Date(date.value),
+						time: timestamp,
+					}
 
-    console.log("done ", theatre.name);
-  }
+					if (ShowingExists(showings, showing)) continue
 
-  console.log("finsihed");
+					showings.push(showing)
+					const res = await drizzle.insert(showingSchema).values(showing)
 
-  browser.close();
-});
+					inserted += res.rowsAffected
+				}
+			}
+		}
 
-async function search(browser: any, theatre: (typeof theatres)[0]) {
-  const page = await browser.newPage();
-  const url = `https://www.uecmovies.com/theatres/details/${theatre.id}`;
-  await page.goto(url);
+		console.log('done ', theatre.name, 'with', inserted, 'inserted')
+	}
 
-  let showings: Showing[] = [];
-  const dates = await page.$$eval("select#showdate > option", (els: any) => {
-    return [...els].map((x) => x.value);
-  });
-  console.log("processing ", theatre.name);
-
-  for (const date of dates) {
-    await page.goto(`${url}?showdate=${date}`);
-
-    const response = await page.$$eval(
-      "#now-playing > li",
-      (
-        els: any,
-        { theatre_id, date }: { theatre_id: string; date: string }
-      ) => {
-        const result = [];
-
-        for (const el of [...els]) {
-          const movie_id = el
-            .querySelector(".movieTimes > .movieTimesLeft > a")
-            .href.split("/")
-            .at(-1);
-
-          for (const time of el.querySelectorAll(
-            ".auditoriumStyleShowtimes > span"
-          )) {
-            const [t, halve] = time.innerText.split(" ");
-            const [hour, minute] = t.split(":");
-
-            const hoursToAdd = halve === "PM" ? 12 : 0;
-            const hours = 60 * (Number(hour) + hoursToAdd);
-
-            const timestamp = 60000 * (Number(minute) + hours);
-
-            result.push({
-              movie_id,
-              theatre_id,
-              date,
-              time: timestamp,
-            });
-          }
-        }
-
-        return result;
-      },
-      { theatre_id: theatre.id, date }
-    );
-
-    showings = [...showings, ...response];
-  }
-
-  return showings;
-}
+	console.log('finished')
+})
