@@ -1,14 +1,5 @@
 <script setup lang="ts">
-import {
-	useBreakpoints,
-	breakpointsTailwind,
-	whenever,
-	useLocalStorage,
-	watchOnce,
-	watchDebounced,
-	useDark,
-	useElementSize,
-} from '@vueuse/core'
+import { useBreakpoints, breakpointsTailwind, whenever, useLocalStorage, watchOnce, watchDebounced, useDark, useElementSize } from '@vueuse/core'
 import dayjs, { type Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import type { Movie } from 'assets/scripts/types/movies'
@@ -35,7 +26,7 @@ const route = useRoute()
 const router = useRouter()
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const isDeviceSmall = breakpoints.smallerOrEqual('md')
-const theatre = useLocalStorage('uec-theatre', '')
+const theatre = useCookie('uec-theatre')
 const trailerEnabled = ref(false)
 const showings = reactive<Showings>({
 	list: [],
@@ -44,12 +35,9 @@ const showings = reactive<Showings>({
 	options: [],
 })
 
-const { data: movie, error } = useFetch<Movie>(
-	() => `/api/movies/${route.params.movieid}`,
-	{
-		method: 'POST',
-	}
-)
+const { data: movie, error } = useFetch<Movie>(() => `/api/movies/${route.params.movieid}`, {
+	method: 'POST',
+})
 
 const metadatas = computed(() => {
 	return [
@@ -105,17 +93,18 @@ whenever(
 
 		if (!t) return
 
-		const { data } = await useFetch<Showing[]>(
-			() => `/api/movies/${id}/showings`,
-			{
-				body: t.id,
-				method: 'POST',
-			}
-		)
+		const { data } = await useFetch<Showing[]>(`/api/movies/${id}/showings`, {
+			body: {
+				id: t.id,
+				date: dayjs().startOf('day').toDate(),
+			},
+			method: 'POST',
+			default: () => [],
+		})
 
 		console.log(data, data.value)
 
-		showings.list = data.value || []
+		showings.list = data.value
 	},
 	{ immediate: true }
 )
@@ -135,13 +124,20 @@ watchDebounced(
 </script>
 
 <template>
-	<u-container>
+	<u-container class="overflow-hidden">
 		<div :style="{ minHeight: `calc(${height}px + 2rem)` }">
-			<div class="flex justify-center md:float-left mb-8 md:mr-8">
+			<div class="flex justify-center md:float-left mb-8 md:mr-8 relative overscroll-contain">
 				<img
 					ref="posterEl"
 					class="min-w-xs max-w-xs aspect-intial"
-					:src="movie?.poster"
+					:src="`https://uecmovies.com${movie?.poster}`"
+					:alt="movie?.title"
+				/>
+
+				<img
+					ref="posterEl"
+					class="min-w-xs max-w-xs aspect-intial absolute scale-200 blur-3xl -z-1 opacity-25 pointer-events-none select-none"
+					:src="`https://uecmovies.com${movie?.poster}`"
 					:alt="movie?.title"
 				/>
 			</div>
@@ -150,9 +146,7 @@ watchDebounced(
 				<div class="flex gap-4 items-start">
 					<h1 class="m-0">{{ movie?.title }}</h1>
 
-					<span
-						class="noto-serif text-white bg-black dark:bg-white dark:text-black font-bold px-1 rounded select-none whitespace-nowrap mt-2 <sm:mt-3"
-					>
+					<span class="noto-serif text-white bg-black dark:bg-white dark:text-black font-bold px-1 rounded select-none whitespace-nowrap mt-2 <sm:mt-3">
 						{{ movie?.mpaa }}
 					</span>
 				</div>
@@ -169,7 +163,7 @@ watchDebounced(
 
 			<br />
 
-			<table>
+			<table class="z-1">
 				<tbody>
 					<tr
 						v-for="metadata of metadatas"
@@ -198,9 +192,16 @@ watchDebounced(
 
 		<div
 			id="showings"
-			class="border border-dark-500 p-4 sm:p-8 min-h-xs"
+			class="border border-dark-500 bg-dark-900 p-4 sm:p-8 min-h-xs"
 		>
-			{{ showings.date }}
+			<div
+				v-if="!theatre"
+				class="flex flex-col justify-center items-center gap-2 min-h-xs"
+			>
+				<p>You don't have a theatre selected.</p>
+
+				<u-button :href="`/theatres?redirect=/movies/${movie?.id}`">Select a theatre</u-button>
+			</div>
 		</div>
 	</u-container>
 

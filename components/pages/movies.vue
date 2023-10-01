@@ -141,11 +141,7 @@ useHead({
 			:slides-per-view="slideAmount"
 			:space-between="16"
 		>
-			<swiper-slide
-				v-for="movie of isMounted && section.movies.length > 0
-					? section.movies
-					: placeholders"
-			>
+			<swiper-slide v-for="movie of isMounted && section.movies.length > 0 ? section.movies : placeholders">
 				<component
 					:is="isMounted ? NuxtLink : 'div'"
 					class="space-y-2 max-w-xs group text-black/70 dark:text-white/50"
@@ -153,7 +149,7 @@ useHead({
 				>
 					<img
 						class="w-full"
-						:src="movie.poster"
+						:src="`https://uecmovies.com/${movie.poster}`"
 						:alt="movie.title"
 					/>
 

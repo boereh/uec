@@ -5,27 +5,25 @@ import { eq, gte, and } from 'drizzle-orm'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
+type Body = {
+	id: number
+	date: Date
+}
+
 dayjs.extend(utc)
 
 export default defineEventHandler(async (event) => {
-    const tid = await readBody<string>(event)
-    const movieid = getRouterParam(event, 'movieid')
+	const { id: tid, date } = await readBody<Body>(event)
+	const movieid = getRouterParam(event, 'movieid')
 
-    if (!tid || !movieid) return BadRequest(event)
+	if (!tid || !movieid || !date) return BadRequest(event)
 
-    const showings = await drizzle
-        .select()
-        .from(showingSchema)
-        .where(
-            and(
-                eq(showingSchema.theatre_id, Number(tid)),
-                eq(showingSchema.movie_id, Number(movieid)),
-                gte(
-                    showingSchema.date,
-                    dayjs(dayjs().format('YYYY-MM-DD')).toDate()
-                )
-            )
-        )
+	const showings = await drizzle
+		.select()
+		.from(showingSchema)
+		.where(and(eq(showingSchema.theatre_id, Number(tid)), eq(showingSchema.movie_id, Number(movieid))))
 
-    return showings
+	console.log(showings, dayjs(date).startOf('day').toDate())
+
+	return showings
 })

@@ -1,6 +1,5 @@
 import { drizzle as Drizzle } from 'drizzle-orm/planetscale-serverless'
 import { connect } from '@planetscale/database'
-import { createClient } from '@vercel/edge-config'
 
 export const connection = connect({
 	host: process.env.PS_HOST,
@@ -9,5 +8,3 @@ export const connection = connect({
 })
 
 export const drizzle = Drizzle(connection)
-
-export const config = createClient(process.env.EDGE_CONFIG)
