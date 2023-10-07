@@ -5,7 +5,7 @@ import { and, gte } from 'drizzle-orm'
 
 dayjs.extend(utc)
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
 	const movies = await drizzle
 		.select({
 			id: moviesSchema.id,
@@ -16,16 +16,10 @@ export default defineEventHandler(async () => {
 		})
 		.from(moviesSchema)
 
-	const date = dayjs.utc(new Date()).startOf('day').toDate()
-	const hoursInSeconds = dayjs.utc(new Date()).hour() * 60 * 60
-	const minutesInSeconds = dayjs.utc(new Date()).hour() * 60
-	const seconds = dayjs.utc(new Date()).hour()
-	const time = (seconds + minutesInSeconds + hoursInSeconds) * 1000
-
 	const showings = await drizzle
 		.select()
 		.from(showingSchema)
-		.where(and(gte(showingSchema.date, date), gte(showingSchema.time, time)))
+		.where(gte(showingSchema.date, dayjs.utc().subtract(1, 'day').toDate()))
 
 	return movies.filter((movie) => {
 		if (movie.special) return true

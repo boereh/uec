@@ -4,26 +4,35 @@ import { drizzle } from '#utils/database'
 import { eq, gte, and } from 'drizzle-orm'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-
-type Body = {
-	id: number
-	date: Date
-}
+import tz from 'dayjs/plugin/timezone'
+import Theatres from 'assets/json/theatres.json'
 
 dayjs.extend(utc)
+dayjs.extend(tz)
 
 export default defineEventHandler(async (event) => {
-	const { id: tid, date } = await readBody<Body>(event)
-	const movieid = getRouterParam(event, 'movieid')
+  const date = await readRawBody(event)
+  const tid = getCookie(event, 'uec-theatre')
+  const movieid = getRouterParam(event, 'movieid')
 
-	if (!tid || !movieid || !date) return BadRequest(event)
+  if (!tid || !movieid || !date) return BadRequest(event)
 
-	const showings = await drizzle
-		.select()
-		.from(showingSchema)
-		.where(and(eq(showingSchema.theatre_id, Number(tid)), eq(showingSchema.movie_id, Number(movieid))))
+  const theatre = Theatres.find(({ id }) => id === Number(id))
 
-	console.log(showings, dayjs(date).startOf('day').toDate())
+  if (!theatre) return BadRequest(event, 'No theatre')
 
-	return showings
+  const showings = await drizzle
+    .select()
+    .from(showingSchema)
+    .where(
+      and(
+        eq(showingSchema.theatre_id, Number(tid)),
+        eq(showingSchema.movie_id, Number(movieid)),
+        gte(showingSchema.date, dayjs.tz(date, theatre.timezone).startOf('day').toDate())
+      )
+    )
+
+  console.log(showings)
+
+  return showings
 })

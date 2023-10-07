@@ -12,3 +12,15 @@ export type Movie = {
   youtube: string | null
   poster: string
 }
+
+export type Theatre = {
+  [k: string]: any
+  name: string
+  id: number
+  address: string
+  phone: string
+  state: string
+  features: string[]
+  concessions: string[]
+  timezone: string
+}
