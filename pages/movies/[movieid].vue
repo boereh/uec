@@ -2,9 +2,11 @@
 import { useBreakpoints, breakpointsTailwind, whenever, useLocalStorage, watchOnce, watchDebounced, useDark, useElementSize } from '@vueuse/core'
 import dayjs, { type Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import tz from 'dayjs/plugin/timezone'
 import type { Movie } from 'assets/scripts/types/movies'
 
 dayjs.extend(utc)
+dayjs.extend(tz)
 
 type Showing = {
   id: number
@@ -15,8 +17,8 @@ type Showing = {
 type Showings = {
   list: Showing[]
   filtered: Showing[]
-  date: string | null
-  options: string[]
+  date: Dayjs
+  options: Dayjs[]
 }
 
 const theatre = useTheatre()
@@ -30,7 +32,7 @@ const trailerEnabled = ref(false)
 const showings = reactive<Showings>({
   list: [],
   filtered: [],
-  date: dayjs().startOf('day').toISOString(),
+  date: dayjs().startOf('day'),
   options: [],
 })
 
@@ -86,14 +88,28 @@ whenever(
 
     if (!theatre.value) return
 
-    const { data, error } = await useFetch<Showing[]>(`/api/movies/${id}/showings`, {
+    const { data, status } = await useFetch<Showing[]>(`/api/movies/${id}/showings`, {
       body: dayjs().startOf('day').toISOString(),
       method: 'POST',
     })
 
-    console.log(data.value, error.value)
+    watchOnce(data, (list) => {
+      showings.list = list || []
 
-    showings.list = data.value || []
+      if (!theatre.value) return
+
+      const options: Record<string, Dayjs> = {}
+
+      for (const showing of showings.list) {
+        const date = dayjs.tz(showing.date, theatre.value.timezone).startOf('day')
+
+        if (options[date.toISOString()]) continue
+
+        options[date.toISOString()] = date
+      }
+
+      showings.options = Object.values(options).sort((a, b) => a.unix() - b.unix())
+    })
   },
   { immediate: true }
 )
@@ -102,8 +118,9 @@ watchDebounced(
   toRef(showings, 'date'),
   (day) => {
     if (!showings.date) return (showings.filtered = [])
+    const d = day.startOf('day').toISOString()
 
-    showings.filtered = showings.list.filter(({ date }) => day === dayjs.tz(date, theatre.value?.timezone).startOf('day').toISOString())
+    showings.filtered = showings.list.filter(({ date }) => d === dayjs.tz(date, theatre.value?.timezone).startOf('day').toISOString())
   },
   {
     debounce: 50,
@@ -123,12 +140,12 @@ watchDebounced(
           :alt="movie?.title"
         />
 
-        <img
+        <!-- <img
           ref="posterEl"
           class="min-w-xs max-w-xs aspect-intial absolute scale-200 blur-3xl -z-1 opacity-25 pointer-events-none select-none"
           :src="`https://uecmovies.com${movie?.poster}`"
           :alt="movie?.title"
-        />
+        /> -->
       </div>
 
       <div class="flex <md:flex-col gap-4 items-start justify-between">
@@ -189,6 +206,22 @@ watchDebounced(
     <br />
 
     <div
+      v-if="showings.options.length > 0"
+      class="flex gap-2"
+    >
+      <u-button
+        v-for="option of showings.options"
+        :key="option.unix()"
+        :type="showings.date.unix() === option.unix() ? 'primary' : 'default'"
+        @click="showings.date = option"
+      >
+        {{ option.format('DD MMM') === dayjs().format('DD MMMM') ? 'Today' : option.format('DD MMM') }}
+      </u-button>
+    </div>
+
+    <br v-if="showings.options.length > 0" />
+
+    <div
       id="showings"
       class="border border-dark-500 bg-dark-900 p-4 sm:p-8 min-h-xs"
     >
@@ -201,8 +234,28 @@ watchDebounced(
         <u-button :href="`/theatres?redirect=/movies/${movie?.id}`">Select a theatre</u-button>
       </div>
 
-      <div v-for="item of showings.list">
+      <div
+        v-if="theatre && showings.filtered.length > 0"
+        v-for="item of showings.filtered"
+      >
         {{ item.id }}
+      </div>
+
+      <div
+        v-if="theatre && showings.filtered.length < 1"
+        class="flex flex-col justify-center items-center gap-2 min-h-xs text-center"
+      >
+        <p>There isn't any showtimes for this movie at {{ theatre.name }}.</p>
+
+        <div class="flex items-center <sm:flex-col gap-4">
+          <u-button @click="$router.back()"> Go back </u-button>
+
+          <u-button
+            type="text"
+            :href="`/theatres?redirect=/movies/${movie?.id}`"
+            >Select another theatre</u-button
+          >
+        </div>
       </div>
     </div>
   </u-container>

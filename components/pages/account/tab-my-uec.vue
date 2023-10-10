@@ -23,7 +23,7 @@ const communicationForm = reactive({
 watchDebounced(
 	Object.values(toRefs(communicationForm)),
 	([news, showtimes]) => {
-		console.log(news, showtimes)
+		// console.log(news, showtimes)
 	},
 	{
 		debounce: 250,

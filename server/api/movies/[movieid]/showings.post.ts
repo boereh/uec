@@ -32,7 +32,5 @@ export default defineEventHandler(async (event) => {
       )
     )
 
-  console.log(showings)
-
   return showings
 })

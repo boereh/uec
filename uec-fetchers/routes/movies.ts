@@ -103,4 +103,6 @@ export default defineEventHandler(async () => {
 	}
 
 	console.log('finished')
+	
+  return 'Ok'
 })

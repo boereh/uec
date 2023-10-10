@@ -1,4 +1,4 @@
-import { mysqlTable, text, date, datetime, int, json, boolean, timestamp } from 'drizzle-orm/mysql-core'
+import { mysqlTable, text, date, datetime, int, json, boolean, timestamp, tinytext } from 'drizzle-orm/mysql-core'
 
 export const moviesSchema = mysqlTable('movies', {
   id: int('id').notNull().autoincrement().primaryKey(),
@@ -26,6 +26,13 @@ export const showingSchema = mysqlTable('showing', {
   date: timestamp('date').notNull(),
 })
 
+export const featuredSchema = mysqlTable('featured', {
+  id: int('id').notNull().autoincrement().primaryKey(),
+  movie_id: int('movie_id'),
+  url: tinytext('url').notNull(),
+  title: tinytext('title'),
+})
+
 export const theatresSchema = mysqlTable('theatres', {
   id: int('id').notNull().autoincrement().primaryKey(),
   name: text('name').notNull(),
@@ -36,6 +43,7 @@ export const theatresSchema = mysqlTable('theatres', {
   address: text('address').notNull(),
   pricing: json('pricing').notNull(),
 })
+
 export const lastfetchedSchema = mysqlTable('last_fetched', {
   id: int('id').notNull().autoincrement().primaryKey(),
   date: datetime('date').notNull(),
