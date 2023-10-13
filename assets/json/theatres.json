@@ -39,7 +39,22 @@
       "Pretzels",
       "Gehl's Nacho Cheese",
       "Dibs"
-    ]
+    ],
+    "pricing": {
+      "mantinee": {
+        "adult": 8,
+        "child": 8,
+        "senior": 8
+      },
+      "general": {
+        "adult": 10,
+        "child": 8,
+        "senior": 8
+      },
+      "3d": 2.25,
+      "recliners": 1,
+      "bargain": 5.5
+    }
   },
   {
     "name": "UEC Diamond 8",
@@ -80,7 +95,24 @@
       "Gehl's Nacho Cheese",
       "Dibs"
     ],
-    "id": 1009
+    "id": 1009,
+    "pricing": {
+      "mantinee": {
+        "adult": 8.75,
+        "child": 8.75,
+        "senior": 8.75
+      },
+      "general": {
+        "adult": 11,
+        "child": 8.75,
+        "senior": 8.75,
+        "student": 10,
+        "military": 10
+      },
+      "first-mantinee-show": 7,
+      "3d": 2.25,
+      "bargain": 5.5
+    }
   },
   {
     "name": "UEC Bedford",
@@ -129,8 +161,21 @@
       "Hearing Impaired"
     ],
     "concessions": ["Coca-Cola", "Orville Redenbacher", "Nestle", "M&M Mars", "Kernel Season's Popcorn Seasoning", "Hershey's", "Taste of Nature"],
-
-    "id": 1010
+    "id": 1010,
+    "pricing": {
+      "mantinee": {
+        "adult": 8,
+        "child": 8,
+        "senior": 8
+      },
+      "general": {
+        "adult": 10,
+        "child": 8,
+        "senior": 8
+      },
+      "bargain": 5.5,
+      "3d": 2.5
+    }
   },
   {
     "name": "UEC Greenville",
@@ -170,7 +215,21 @@
       "Taste of Nature",
       "Gehl's Nacho Cheese"
     ],
-    "id": 1015
+    "id": 1015,
+    "pricing": {
+      "mantinee": {
+        "adult": 7.75,
+        "child": 7.5,
+        "senior": 7.5
+      },
+      "general": {
+        "adult": 9,
+        "child": 7.5,
+        "senior": 7.5,
+        "student": 8.25
+      },
+      "bargain": 5.25
+    }
   },
   {
     "name": "UEC Starkville",
@@ -191,7 +250,21 @@
       "Pickles",
       "Hershey's",
       "Gehl's Nacho Cheese"
-    ]
+    ],
+    "pricing": {
+      "mantinee": {
+        "adult": 8,
+        "child": 8,
+        "senior": 8
+      },
+      "general": {
+        "adult": 10,
+        "child": 8,
+        "senior": 8
+      },
+      "3d": 2,
+      "bargain": 5.5
+    }
   },
   {
     "name": "UEC Elko 6",
@@ -214,7 +287,21 @@
       "Hearing Impaired"
     ],
     "id": 1029,
-    "concessions": ["Coca-Cola", "Orville Redenbacher", "Frozen Beverages", "Nestle", "M&M Mars", "Pickles", "Hershey's"]
+    "concessions": ["Coca-Cola", "Orville Redenbacher", "Frozen Beverages", "Nestle", "M&M Mars", "Pickles", "Hershey's"],
+    "pricing": {
+      "mantinee": {
+        "adult": 9.25,
+        "child": 9,
+        "senior": 9
+      },
+      "general": {
+        "adult": 11,
+        "child": 9,
+        "senior": 9
+      },
+      "3d": 2,
+      "bargain": 6
+    }
   },
   {
     "name": "UEC Crystal 5",
@@ -234,7 +321,21 @@
       "Hearing Impaired"
     ],
     "id": 1030,
-    "concessions": ["Orville Redenbacher", "Nestle", "M&M Mars", "Pickles", "Hershey's"]
+    "concessions": ["Orville Redenbacher", "Nestle", "M&M Mars", "Pickles", "Hershey's"],
+    "pricing": {
+      "mantinee": {
+        "adult": 9.25,
+        "child": 9,
+        "senior": 9
+      },
+      "general": {
+        "adult": 11,
+        "child": 9,
+        "senior": 9
+      },
+      "3d": 2,
+      "bargain": 6
+    }
   },
   {
     "name": "UEC Kinston",
@@ -269,7 +370,21 @@
       "Taste of Nature",
       "Gehl's Nacho Cheese"
     ],
-    "id": 1004
+    "id": 1004,
+    "pricing": {
+      "mantinee": {
+        "adult": 7.75,
+        "child": 7.5,
+        "senior": 7.5
+      },
+      "general": {
+        "adult": 9.75,
+        "child": 7.5,
+        "senior": 7.5
+      },
+      "3d": 2.5,
+      "bargain": 5
+    }
   },
   {
     "name": "UEC Theatres Goldsboro",
@@ -310,7 +425,22 @@
       "Gehl's Nacho Cheese",
       "Dibs"
     ],
-    "id": 1013
+    "id": 1013,
+    "pricing": {
+      "mantinee": {
+        "adult": 8,
+        "child": 8,
+        "senior": 8
+      },
+      "general": {
+        "adult": 19,
+        "child": 9,
+        "senior": 9,
+        "military": 9
+      },
+      "3d": 2.75,
+      "bargain": 5.5
+    }
   },
   {
     "name": "UEC Rocky Mount",
@@ -353,7 +483,22 @@
       "Gehl's Nacho Cheese",
       "Dibs"
     ],
-    "id": 1014
+    "id": 1014,
+    "pricing": {
+      "mantinee": {
+        "adult": 7.75,
+        "child": 7.75,
+        "senior": 7.75
+      },
+      "general": {
+        "adult": 9.25,
+        "adult-weekend": 9.75,
+        "child": 9.25,
+        "senior": 7.75
+      },
+      "3d": 2.25,
+      "bargain": 5
+    }
   },
   {
     "name": "UEC Cambridge",
@@ -375,7 +520,20 @@
       "Hearing Impaired"
     ],
     "concessions": [],
-    "id": 1006
+    "id": 1006,
+    "pricing": {
+      "mantinee": {
+        "adult": 6.5,
+        "child": 6.5,
+        "senior": 6.5
+      },
+      "general": {
+        "adult": 8.5,
+        "child": 6.5,
+        "senior": 6.5
+      },
+      "bargain": 5
+    }
   },
   {
     "name": "UEC Mount Vernon",
@@ -405,7 +563,20 @@
       "Taste of Nature",
       "Gehl's Nacho Cheese"
     ],
-    "id": 1007
+    "id": 1007,
+    "pricing": {
+      "mantinee": {
+        "adult": 6.5,
+        "child": 6.5,
+        "senior": 6.25
+      },
+      "general": {
+        "adult": 8.5,
+        "child": 6.25,
+        "senior": 6.25
+      },
+      "3d": 2.25
+    }
   },
   {
     "name": "UEC Norwalk",
@@ -445,7 +616,21 @@
       "Gehl's Nacho Cheese",
       "Dibs"
     ],
-    "id": 1008
+    "id": 1008,
+    "pricing": {
+      "mantinee": {
+        "adult": 7.5,
+        "child": 7.5,
+        "senior": 7.5
+      },
+      "general": {
+        "adult": 9.5,
+        "child": 7.5,
+        "senior": 7.5
+      },
+      "3d": 2,
+      "bargain": 5
+    }
   },
   {
     "name": "UEC Springfield",
@@ -467,7 +652,21 @@
       "Hearing Impaired"
     ],
     "id": 1032,
-    "concessions": ["Coca-Cola", "Orville Redenbacher", "Nestle", "M&M Mars", "Gourmet Coffee", "Hershey's", "Gehl's Nacho Cheese"]
+    "concessions": ["Coca-Cola", "Orville Redenbacher", "Nestle", "M&M Mars", "Gourmet Coffee", "Hershey's", "Gehl's Nacho Cheese"],
+    "pricing": {
+      "mantinee": {
+        "adult": 8,
+        "child": 8,
+        "senior": 8
+      },
+      "general": {
+        "adult": 10,
+        "child": 8,
+        "senior": 8,
+        "military": 9
+      },
+      "bargain": 5.5
+    }
   },
   {
     "name": "UEC Celina",
@@ -489,7 +688,20 @@
       "Hearing Impaired"
     ],
     "id": 1034,
-    "concessions": ["Orville Redenbacher", "Nestle", "M&M Mars", "Hershey's"]
+    "concessions": ["Orville Redenbacher", "Nestle", "M&M Mars", "Hershey's"],
+    "pricing": {
+      "mantinee": {
+        "adult": 8,
+        "child": 8,
+        "senior": 8
+      },
+      "general": {
+        "adult": 10,
+        "child": 8,
+        "senior": 8
+      },
+      "bargain": 5.5
+    }
   },
   {
     "name": "UEC College 9",
@@ -530,7 +742,23 @@
       "Gehl's Nacho Cheese",
       "Dibs"
     ],
-    "id": 1011
+    "id": 1011,
+    "pricing": {
+      "mantinee": {
+        "adult": 8.5,
+        "child": 8.5,
+        "senior": 8.5
+      },
+      "general": {
+        "adult": 11.25,
+        "child": 8.5,
+        "senior": 8.5,
+        "student": 10
+      },
+      "3d": 2.75,
+      "recliners": 1,
+      "bargain": 6
+    }
   },
   {
     "name": "UEC State College 12",
@@ -574,7 +802,23 @@
       "Gehl's Nacho Cheese",
       "Dibs"
     ],
-    "id": 1012
+    "id": 1012,
+    "pricing": {
+      "mantinee": {
+        "adult": 8.5,
+        "child": 8.5,
+        "senior": 8.5
+      },
+      "general": {
+        "adult": 11.25,
+        "child": 8.5,
+        "senior": 8.5,
+        "student": 10
+      },
+      "3d": 2.75,
+      "recliners": 1,
+      "bargain": 6
+    }
   },
   {
     "name": "UEC Cleveland",
@@ -615,7 +859,22 @@
       "Freschetta Pizza",
       "Gehl's Nacho Cheese"
     ],
-    "id": 1002
+    "id": 1002,
+    "pricing": {
+      "mantinee": {
+        "adult": 9,
+        "child": 8.5,
+        "senior": 8.5
+      },
+      "general": {
+        "adult": 11,
+        "child": 8.5,
+        "senior": 8.5
+      },
+      "3d": 2,
+      "mega-screen": 2,
+      "bargain": 6
+    }
   },
   {
     "name": "UEC Roxy Lebanon",
@@ -649,7 +908,20 @@
       "Hershey's",
       "Pretzels",
       "Gehl's Nacho Cheese"
-    ]
+    ],
+    "pricing": {
+      "mantinee": {
+        "adult": 9.5,
+        "child": 9.5,
+        "senior": 9.5
+      },
+      "general": {
+        "adult": 12,
+        "child": 9.5,
+        "senior": 9.5
+      },
+      "bargain": 6.5
+    }
   },
   {
     "name": "UEC Tooele",
@@ -690,7 +962,22 @@
       "Gehl's Nacho Cheese",
       "Dibs"
     ],
-    "id": 1016
+    "id": 1016,
+    "pricing": {
+      "mantinee": {
+        "adult": 6.75,
+        "child": 6.75,
+        "senior": 6.75
+      },
+      "general": {
+        "adult": 9,
+        "child": 6.75,
+        "senior": 6.75,
+        "military": 7.5
+      },
+      "3d": 2.75,
+      "bargain": 5
+    }
   },
   {
     "name": "UEC Syracuse",
@@ -731,6 +1018,21 @@
       "Taste of Nature",
       "Gehl's Nacho Cheese"
     ],
-    "id": 1017
+    "id": 1017,
+    "pricing": {
+      "mantinee": {
+        "adult": 8.5,
+        "child": 7.75,
+        "senior": 7.75
+      },
+      "general": {
+        "adult": 10.75,
+        "child": 7.75,
+        "senior": 7.75
+      },
+      "3d": 2,
+      "mega-screen": 1,
+      "bargain": 5.5
+    }
   }
 ]

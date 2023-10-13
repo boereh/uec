@@ -1,14 +1,18 @@
 import { drizzle } from '#utils/database'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import tz from 'dayjs/plugin/timezone'
+import Theatres from 'assets/json/theatres.json'
 import { and, eq, gte } from 'drizzle-orm'
 
 dayjs.extend(utc)
+dayjs.extend(tz)
 
 export default defineEventHandler(async (event) => {
-  const tid = getCookie(event, 'uec-theatre')
+  const tid = Number(await readBody<string>(event))
+  const theatre = Theatres.find((x) => x.id === tid)
 
-  if (!tid) return BadRequest(event)
+  if (!theatre) return BadRequest(event)
 
   const movies = await drizzle
     .select({
@@ -17,7 +21,8 @@ export default defineEventHandler(async (event) => {
       date: showingSchema.date,
     })
     .from(moviesSchema)
-    .innerJoin(showingSchema, and(eq(showingSchema.movie_id, moviesSchema.id), eq(showingSchema.theatre_id, Number(tid))))
+    .innerJoin(showingSchema, and(eq(showingSchema.movie_id, moviesSchema.id), eq(showingSchema.theatre_id, tid)))
+    .where(gte(showingSchema.date, dayjs.utc().startOf('day').toDate()))
 
   return movies
 })

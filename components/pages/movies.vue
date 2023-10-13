@@ -158,7 +158,7 @@ useHead({
           :to="`/movies/${movie.id}`"
         >
           <img
-            class="w-full"
+            class="w-full rounded-md shadow-lg"
             :src="!!movie.placeholder ? movie.poster : `https://uecmovies.com${movie.poster}`"
             :alt="movie.title"
           />

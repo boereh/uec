@@ -34,7 +34,7 @@ const types: Record<ButtonTypes, { disabled: string; default: string }> = {
     disabled: 'bg-brand-red/50 text-white/50',
   },
   secondary: {
-    default: 'bg-dark-500 dark:bg-light-500 text-brand-red hover:bg-dark-900 hover:dark:bg-light-900 active:bg-dark-50 active:dark:bg-white',
+    default: 'bg-dark-800 dark:bg-light-500 text-white dark:text-brand-red hover:bg-dark-900 hover:dark:bg-light-900 active:bg-dark-700 active:dark:bg-white',
     disabled: '',
   },
   text: { default: 'hover:bg-light-700 hover:dark:bg-dark-500 active:bg-brand-red/25', disabled: '' },
@@ -82,7 +82,7 @@ function Click() {
   <component
     :is="href ? NuxtLink : 'button'"
     :class="[
-      'flex items-center justify-center gap-2 rounded-md transition-all duration-300 select-none outline-none',
+      'flex items-center justify-center gap-2 rounded-md transition-all select-none outline-none',
       (type ? types[type] : types.default)[disabled ? 'disabled' : 'default'],
       size ? sizes[size] : sizes.default,
       wrap ? '' : 'whitespace-nowrap',

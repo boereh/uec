@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLocalStorage, watchDebounced } from '@vueuse/core'
+import { useLocalStorage, useMounted, watchDebounced } from '@vueuse/core'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import Theatres from 'assets/json/theatres.json'
 import dayjs, { Dayjs } from 'dayjs'
@@ -40,9 +40,10 @@ type Options = {
   times: Array<Option>
 }
 
+const isMounted = useMounted()
 const swiperEl = ref<typeof Swiper>()
-const controlledSwiper = ref<any>(null)
-const lastswipped = ref<number>() 
+const fetchingMovies = ref(false)
+const lastswipped = ref<number>()
 const showtime = reactive<Showtime>({
   theatre: null,
   movie: null,
@@ -55,7 +56,7 @@ const options = computed(() => {
 
   if (!showtime.theatre) return result
 
-  let theatre = Theatres.find((x) => x.id === showtime.theatre)
+  let theatre = Theatres.find((x) => x.id === Number(showtime.theatre))
 
   if (!theatre) return result
 
@@ -70,11 +71,11 @@ const options = computed(() => {
 
   if (!showtime.movie) return result
 
-  const today = dayjs.tz(dayjs(), theatre.timezone).startOf('day').unix()
+  const today = dayjs().tz(theatre.timezone).startOf('day').unix()
 
   for (const movie of movies.value) {
     if (movie.id !== Number(showtime.movie)) continue
-    let day = dayjs.tz(movie.date, theatre.timezone).startOf('day')
+    let day = dayjs.utc(movie.date).tz(theatre.timezone).startOf('day')
 
     if (today > day.unix()) continue
     if (result.dates.find((x) => x.value === day.unix())) continue
@@ -100,7 +101,7 @@ const options = computed(() => {
 
   for (const movie of movies.value) {
     if (movie.id !== Number(showtime.movie)) continue
-    let day = dayjs.tz(movie.date, theatre.timezone)
+    let day = dayjs.utc(movie.date).tz(theatre.timezone)
 
     if (Number(showtime.date) !== day.startOf('day').unix()) continue
 
@@ -122,6 +123,9 @@ type UpdateValueArg = {
   time?: number
 }
 
+/**
+ * if each parameter is undefined then
+ */
 function UpdateValue({ theatre, movie, date, time }: UpdateValueArg) {
   if (undefined !== time) return (showtime.time = Number(time))
   showtime.time = null
@@ -158,11 +162,15 @@ onMounted(() => {
 watch(toRef(showtime, 'theatre'), async (tid) => {
   movies.value = []
 
-  if (!tid || !Theatres.find((x) => x.id === Number(tid))) return
+  fetchingMovies.value = true
 
-  const { data } = await useFetch<Movie[]>('/api/movies/for-theatre', { method: 'POST' })
+  if (!tid || !Theatres.find((x) => x.id === Number(tid))) return (fetchingMovies.value = false)
+
+  const { data } = await useFetch<Movie[]>('/api/movies/for-theatre', { method: 'POST', body: tid.toString() })
 
   movies.value = data.value || []
+
+  fetchingMovies.value = false
 })
 
 useHead({
@@ -173,41 +181,43 @@ useHead({
 <template>
   <u-container>
     <div class="flex <lg:flex-col gap-4 sm:gap-8">
-      <div class="flex-grow lg:max-w-2xl">
+      <div class="flex-grow lg:max-w-2xl w-full overflow-hidden">
         <h3 class="mt-0">Featured</h3>
 
-        <swiper
-          ref="swiperEl"
-          :slides-per-view="1"
-          :loop="true"
-          class="select-none"
-          @slideChange="lastswipped = Date.now()"
-        >
-          <swiper-slide v-for="movie of featured || []">
-            <nuxt-link
-              :to="movie.movie_id ? `/movies/${movie.movie_id}` : ''"
-              class="relative"
-            >
-              <img
-                class="w-full"
-                :src="`https://uecmovies.com${movie.url}`"
-                :alt="movie.title"
-              />
-
-              <span
-                class="absolute bottom-0 left-0 w-full max-w-full p-2 md:p-4 md:pt-8 text-white bg-gradient-to-t from-black/75 to-black/0 font-bold md:text-2xl"
+        <div class="aspect-featured rounded-md overflow-hidden">
+          <swiper
+            ref="swiperEl"
+            :slides-per-view="1"
+            :loop="true"
+            class="select-none"
+            @slideChange="lastswipped = Date.now()"
+          >
+            <swiper-slide v-for="movie of isMounted && featured ? featured : []">
+              <nuxt-link
+                :to="movie.movie_id ? `/movies/${movie.movie_id}` : ''"
+                class="relative"
               >
-                {{ movie.title }}
-              </span>
-            </nuxt-link>
-          </swiper-slide>
-        </swiper>
+                <img
+                  class="w-full"
+                  :src="`https://uecmovies.com${movie.url}`"
+                  :alt="movie.title"
+                />
+
+                <span
+                  class="absolute bottom-0 left-0 w-full max-w-full p-2 md:p-4 md:pt-8 text-white bg-gradient-to-t from-black/75 to-black/0 font-bold md:text-2xl whitespace-nowrap"
+                >
+                  {{ movie.title }}
+                </span>
+              </nuxt-link>
+            </swiper-slide>
+          </swiper>
+        </div>
       </div>
 
       <div class="min-w-xs flex flex-col">
         <h3 class="mt-0">Find Showtimes</h3>
 
-        <div class="bg-dark-700 p-4 flex-grow flex flex-col gap-4">
+        <u-sheet class="flex-grow">
           <u-form>
             <div class="grid md:grid-cols-2 lg:grid-cols-1 gap-4">
               <u-form-item label="Theatre">
@@ -222,6 +232,7 @@ useHead({
                   :value="showtime.movie"
                   :options="options.movies"
                   :disabled="null === showtime.theatre"
+                  :loading="fetchingMovies"
                   @update:value="UpdateValue({ movie: $event })"
                 />
               </u-form-item>
@@ -233,6 +244,7 @@ useHead({
                   :value="showtime.date"
                   :options="options.dates"
                   :disabled="null === showtime.movie"
+                  :loading="fetchingMovies"
                   @update:value="UpdateValue({ date: $event })"
                 />
               </u-form-item>
@@ -242,6 +254,7 @@ useHead({
                   :value="showtime.time"
                   :options="options.times"
                   :disabled="null === showtime.date"
+                  :loading="fetchingMovies"
                   @update:value="UpdateValue({ time: $event })"
                 />
               </u-form-item>
@@ -259,7 +272,7 @@ useHead({
               Get Ticket
             </u-button>
           </div>
-        </div>
+        </u-sheet>
       </div>
     </div>
 
@@ -267,7 +280,7 @@ useHead({
     <br />
 
     <div class="flex <sm:flex-col gap-4 sm:gap-8">
-      <div class="bg-brand-red-grad px-8 pt-8 pb-4 min-w-56 grid place-items-center">
+      <div class="bg-brand-red-grad px-8 pt-8 pb-4 min-w-56 grid place-items-center rounded-md">
         <img
           src="/img/loyalty-rewards-card-angled.png"
           alt="loyalty rewards cards"
@@ -307,7 +320,7 @@ useHead({
         </nuxt-link>
       </div>
 
-      <div class="bg-brand-red-grad p-4 min-w-56 grid place-items-center">
+      <div class="bg-brand-red-grad p-4 min-w-56 grid place-items-center rounded-md">
         <img
           src="/img/loyalty-rewards-tickets-turned.png"
           alt="loyalty rewards cards"
@@ -318,7 +331,7 @@ useHead({
     <br />
 
     <div class="flex <sm:flex-col gap-4 sm:gap-8">
-      <div class="bg-brand-red-grad px-8 pt-8 pb-2 min-w-56 grid place-items-center">
+      <div class="bg-brand-red-grad px-8 pt-8 pb-2 min-w-56 grid place-items-center rounded-md">
         <img
           class="max-w-40"
           src="/img/gift-card-main.png"

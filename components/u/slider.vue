@@ -63,7 +63,7 @@ onClickOutside(buttonRef, () => (focused.value = false))
   <div
     ref="containerRef"
     :class="[
-      'h-1.5 my-2 dark:bg-dark-500 rounded-md relative flex items-center transition duration-200 border dark:border-dark-300',
+      'h-1.5 my-2 dark:bg-dark-500 rounded-md relative flex items-center transition-default border dark:border-dark-300',
       hoveringContainer && 'dark:bg-dark-50',
     ]"
     @click.self="Update($event.x, true)"
@@ -76,7 +76,7 @@ onClickOutside(buttonRef, () => (focused.value = false))
     <button
       ref="buttonRef"
       :class="[
-        'absolute block w-4 h-4 outline-none bg-brand-red rounded-full p-0.25 hover:scale-125 hover:p-0.75 tranform transition duration-300 -translate-x-1/2',
+        'absolute block w-4 h-4 outline-none bg-brand-red rounded-full p-0.25 hover:scale-125 hover:p-0.75 tranform transition-default -translate-x-1/2',
         focused && 'scale-125 p-0.75',
       ]"
       :style="{ left: `${percent * 100}%` }"
