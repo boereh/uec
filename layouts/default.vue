@@ -29,7 +29,6 @@ const theatre = useTheatre()
 const breadcrumbs = useState<string[]>('useBreadcrumbs', () => [])
 const drawerEnabled = ref(false)
 const { height } = useWindowSize()
-const user = useSupabaseUser()
 const search = ref('')
 
 const theatreName = computed(() => {

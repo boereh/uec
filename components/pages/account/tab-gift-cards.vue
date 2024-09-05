@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import states from 'assets/json/states.json'
-import { RuleFn } from 'assets/scripts/types/form'
+import type { RuleFn } from '~/assets/scripts/types/form'
 
 type EditForm = {
   id: null | string

@@ -1,39 +1,31 @@
 <script setup lang="ts">
-const auth = useSupabaseClient().auth
 const router = useRouter()
 
 function SignOut() {
-    auth.signOut()
-
-    router.push('/login')
+  router.push('/login')
 }
 </script>
 
 <template>
-    <p class="dark:text-white/50">
-        All of the dangerous actions you can do to your account. Please be
-        careful with these.
-    </p>
+  <p class="dark:text-white/50">All of the dangerous actions you can do to your account. Please be careful with these.</p>
 
-    <br />
+  <br />
 
-    <h4>Sign out</h4>
+  <h4>Sign out</h4>
 
-    <p>
-        Your account will be permanently deleted. This action is irreversible
-        and can not be undone.
-    </p>
+  <p>Your account will be permanently deleted. This action is irreversible and can not be undone.</p>
 
-    <u-button type="primary" @click="">Sign out</u-button>
+  <u-button
+    type="primary"
+    @click=""
+    >Sign out</u-button
+  >
 
-    <br />
+  <br />
 
-    <h4>Delete Account</h4>
+  <h4>Delete Account</h4>
 
-    <p>
-        Your account will be permanently deleted. This action is irreversible
-        and can not be undone.
-    </p>
+  <p>Your account will be permanently deleted. This action is irreversible and can not be undone.</p>
 
-    <u-button>Delete</u-button>
+  <u-button>Delete</u-button>
 </template>

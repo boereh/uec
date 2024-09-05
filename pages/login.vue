@@ -6,21 +6,21 @@ type Provider = 'google' | 'facebook' | 'twitch' | 'twitter' | 'discord' | 'gith
 const route = useRoute()
 const router = useRouter()
 
-function Login(provider: Provider) {
-  useSupabaseClient().auth.signInWithOAuth({
-    provider,
-    options: {
-      queryParams: {
-        redirect: (route.query.redirect as string) || '/account',
-      },
-      redirectTo: `${location.origin}/confirm`,
-    },
-  })
-}
+// function Login(provider: Provider) {
+//   useSupabaseClient().auth.signInWithOAuth({
+//     provider,
+//     options: {
+//       queryParams: {
+//         redirect: (route.query.redirect as string) || '/account',
+//       },
+//       redirectTo: `${location.origin}/confirm`,
+//     },
+//   })
+// }
 
-whenever(useSupabaseUser(), () => router.replace('/account'), {
-  immediate: true,
-})
+// whenever(useSupabaseUser(), () => router.replace('/account'), {
+//   immediate: true,
+// })
 
 definePageMeta({
   middleware: ['authenication'],
