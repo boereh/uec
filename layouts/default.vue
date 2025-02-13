@@ -1,60 +1,71 @@
-<script setup lang="ts">
-import { useLocalStorage, useWindowSize, usePreferredColorScheme } from '@vueuse/core'
-import Theatres from 'assets/json/theatres.json'
+<script setup lang="ts"></script>
+
+<template>
+  <navigation />
+
+  <slot />
+</template>
+
+<!-- <script setup lang="ts">
+import {
+  useLocalStorage,
+  useWindowSize,
+  usePreferredColorScheme,
+} from "@vueuse/core";
+import Theatres from "assets/scripts/theatres";
 
 const links = [
   {
-    to: '/movies',
-    text: 'Movies',
+    to: "/movies",
+    text: "Movies",
   },
   {
-    to: '/loyalty-rewards',
-    text: 'Loyalty Rewards',
+    to: "/loyalty-rewards",
+    text: "Loyalty Rewards",
   },
   {
-    to: '/gift-cards',
-    text: 'Gift Cards',
+    to: "/gift-cards",
+    text: "Gift Cards",
   },
   {
-    to: '/group-sales',
-    text: 'Group Sales',
+    to: "/group-sales",
+    text: "Group Sales",
   },
   {
-    to: '/about',
-    text: 'About UEC',
+    to: "/about",
+    text: "About UEC",
   },
-]
+];
 
-const theatre = useTheatre()
-const breadcrumbs = useState<string[]>('useBreadcrumbs', () => [])
-const drawerEnabled = ref(false)
-const { height } = useWindowSize()
-const search = ref('')
+const theatre = useTheatre();
+const breadcrumbs = useState<string[]>("useBreadcrumbs", () => []);
+const drawerEnabled = ref(false);
+const { height } = useWindowSize();
+const search = ref("");
+const user = ref(null);
 
 const theatreName = computed(() => {
-  if (!theatre.value) return 'NO THEATRE SET'
+  if (!theatre.value) return "NO THEATRE SET";
 
-  const t = Theatres.find(({ id }) => id === Number(id))
+  const t = Theatres.find(({ id }) => id === Number(id));
 
-  return t ? t.name : 'NO THEATRE SET'
-})
+  return t ? t.name : "NO THEATRE SET";
+});
 
 useHead({
   htmlAttrs: {
     class: usePreferredColorScheme().value,
     style: `color-scheme: ${usePreferredColorScheme().value};`,
   },
-})
+});
 </script>
 
 <template>
-  <nav class="bg-light-300 dark:bg-dark-900 border-b border-brand-red shadow-xl relative max-w-screen overflow-x-hidden sticky top-0 pl-4 sm:px-8 z-100">
+  <nav
+    class="bg-light-300 dark:bg-dark-900 border-b border-brand-red shadow-xl relative max-w-screen overflow-x-hidden sticky top-0 pl-4 sm:px-8 z-100"
+  >
     <div class="max-w-5xl mx-auto h-24 flex gap-4 justify-between">
-      <nuxt-link
-        class="h-full py-2"
-        to="/"
-        @click="drawerEnabled = false"
-      >
+      <nuxt-link class="h-full py-2" to="/" @click="drawerEnabled = false">
         <svg-logo class="h-full w-24" />
       </nuxt-link>
 
@@ -62,11 +73,10 @@ useHead({
         <div
           class="bg-brand-red relative after:content-[''] after:block after:bg-brand-red after:w-full after:h-8 after:absolute after:left-full after:bottom-0 rounded-l-md"
         >
-          <span class="px-2 justify-center items-center flex-grow flex gap-1 h-8 whitespace-nowrap text-white">
-            <icon
-              name="fluent:location-24-filled"
-              class="dark:text-white"
-            />
+          <span
+            class="px-2 justify-center items-center flex-grow flex gap-1 h-8 whitespace-nowrap text-white"
+          >
+            <icon name="fluent:location-24-filled" class="dark:text-white" />
 
             <nuxt-link
               to="/theatres"
@@ -78,7 +88,9 @@ useHead({
           </span>
         </div>
 
-        <div class="h-10 flex justify-between items-center flex-grow md:hidden w-full">
+        <div
+          class="h-10 flex justify-between items-center flex-grow md:hidden w-full"
+        >
           <nuxt-link
             class="grid place-items-center text-2xl h-full aspect-1 dark:text-white"
             to="/account"
@@ -100,7 +112,13 @@ useHead({
             :class="[drawerEnabled ? 'bg-brand-red text-white' : '']"
             @click="drawerEnabled = !drawerEnabled"
           >
-            <icon :name="drawerEnabled ? 'fluent:dismiss-20-regular' : 'fluent:line-horizontal-3-20-regular'" />
+            <icon
+              :name="
+                drawerEnabled
+                  ? 'fluent:dismiss-20-regular'
+                  : 'fluent:line-horizontal-3-20-regular'
+              "
+            />
           </button>
         </div>
       </div>
@@ -112,7 +130,9 @@ useHead({
             'after:content-[\'\'] after:block after:bg-brand-red after:w-full after:h-8 after:absolute after:left-full after:bottom-0',
           ]"
         >
-          <div class="<md:hidden h-8 grid grid-cols-5 w-full whitespace-nowrap text-sm">
+          <div
+            class="<md:hidden h-8 grid grid-cols-5 w-full whitespace-nowrap text-sm"
+          >
             <nuxt-link
               v-for="(link, index) of links"
               :key="link.to"
@@ -130,25 +150,21 @@ useHead({
             to="/account"
             @click="drawerEnabled = false"
           >
-            <icon
-              name="fluent:person-20-filled"
-              size="20"
-            />
+            <icon name="fluent:person-20-filled" size="20" />
 
-            {{ !!user ? user.user_metadata.full_name : 'Log in' }}
+            {{ !!user ? user : "Log in" }}
           </nuxt-link>
 
-          <span class="px-2 justify-end items-center flex-grow flex gap-1 whitespace-nowrap">
+          <span
+            class="px-2 justify-end items-center flex-grow flex gap-1 whitespace-nowrap"
+          >
             <icon
               name="fluent:location-20-filled"
               size="20"
               class="text-brand-red"
             />
 
-            <nuxt-link
-              to="/theatres"
-              class="hover:underline dark:text-white"
-            >
+            <nuxt-link to="/theatres" class="hover:underline dark:text-white">
               {{ theatreName }}
             </nuxt-link>
           </span>
@@ -166,7 +182,9 @@ useHead({
 
   <slot />
 
-  <div class="md:hidden fixed top-0 bottom-0 left-0 right-0 pt-24 pointer-events-none z-100">
+  <div
+    class="md:hidden fixed top-0 bottom-0 left-0 right-0 pt-24 pointer-events-none z-100"
+  >
     <div
       class="h-full max-h-full flex flex-col transition-default"
       :class="[drawerEnabled ? 'bg-dark-900/50 pointer-events-auto' : '']"
@@ -183,7 +201,9 @@ useHead({
           drawerEnabled ? '' : 'translate-x-full',
         ]"
         :style="{
-          transitionDelay: drawerEnabled ? `${index * 50}ms` : `${(links.length - 1) * 25 - index * 25}ms`,
+          transitionDelay: drawerEnabled
+            ? `${index * 50}ms`
+            : `${(links.length - 1) * 25 - index * 25}ms`,
         }"
         :to="link.to"
         @click="drawerEnabled = false"
@@ -197,7 +217,9 @@ useHead({
 
   <footer class="border-t dark:border-dark-300">
     <u-container>
-      <div class="flex gap-4 justify-between whitespace-nowrap flex-wrap overflow-hidden">
+      <div
+        class="flex gap-4 justify-between whitespace-nowrap flex-wrap overflow-hidden"
+      >
         <nuxt-link
           v-for="(link, index) of links"
           :key="link.to"
@@ -207,26 +229,13 @@ useHead({
           {{ link.text }}
         </nuxt-link>
 
-        <nuxt-link
-          to="/contact-us"
-          :class="['text-center']"
-        >
+        <nuxt-link to="/contact-us" :class="['text-center']">
           Contact Us
         </nuxt-link>
 
-        <nuxt-link
-          to="/account"
-          :class="['text-center']"
-        >
-          Account
-        </nuxt-link>
+        <nuxt-link to="/account" :class="['text-center']"> Account </nuxt-link>
 
-        <nuxt-link
-          to="/login"
-          :class="['text-center']"
-        >
-          Login
-        </nuxt-link>
+        <nuxt-link to="/login" :class="['text-center']"> Login </nuxt-link>
       </div>
 
       <br />
@@ -234,12 +243,7 @@ useHead({
       <div class="flex justify-between <sm:justify-center flex-wrap gap-4">
         <span>
           © 2023 United Entertainment Corp.
-          <nuxt-link
-            class="link"
-            to="/privacy"
-          >
-            Privacy Policy
-          </nuxt-link>
+          <nuxt-link class="link" to="/privacy"> Privacy Policy </nuxt-link>
         </span>
 
         <span class="flex gap-4">
@@ -265,3 +269,94 @@ useHead({
     </u-container>
   </footer>
 </template>
+ -->
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Noto+Serif:wght@700&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+  @apply bg-black text-white overflow-x-hidden;
+}
+
+.noto-serif {
+  font-family: "Noto Serif", serif;
+}
+
+h1 {
+  @apply text-4xl fontbold my-4;
+}
+
+h2 {
+  @apply text-3xl my-4;
+}
+
+h3 {
+  @apply text-2xl font-bold my-4;
+}
+
+h4 {
+  @apply text-xl my-4;
+}
+
+h5 {
+  @apply text-lg font-bold my-4;
+}
+
+h6 {
+  @apply text-md my-4;
+}
+
+p {
+  @apply mb-2;
+}
+
+a.link {
+  @apply text-brand-red hover:underline;
+}
+
+.fill-container {
+  height: calc(100dvh - 6rem - 1px);
+}
+
+hr {
+  @apply my-12 border-light-700 dark:border-dark-50 border-dashed;
+}
+
+.bg-brand-red-grad {
+  background: rgb(233, 0, 0);
+  background: radial-gradient(circle, #e90000 0%, #3b0000 100%);
+}
+
+.bg-brand-brown-grad {
+  background: rgb(247, 218, 186);
+  background: radial-gradient(
+    circle,
+    rgba(247, 218, 186, 1) 15%,
+    rgba(147, 131, 118, 1) 100%
+  );
+  background-size: 100% 6rem;
+  background-position-x: center;
+  background-position-y: center;
+  color: black;
+}
+
+ul {
+  @apply list-disc list-inside;
+}
+
+ul > li {
+  @apply mb-2;
+}
+
+highlight {
+  @apply bg-yellow/50;
+}
+
+.aspect-featured {
+  aspect-ratio: 672 / 401;
+}
+
+.transition-default {
+  @apply transition-all duration-200;
+}
+</style>
