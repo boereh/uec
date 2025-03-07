@@ -1,0 +1,71 @@
+<script setup lang="ts">
+import { useElementBounding } from "@vueuse/core";
+import { PhVideo } from "@phosphor-icons/vue";
+
+const trailer_el = useTemplateRef("trailer");
+const { width, height } = useElementBounding(trailer_el);
+const route = useRoute();
+const { data: movie } = useFetch(`/api/movies/${route.params.id}`);
+</script>
+
+<template>
+  <div v-if="movie" class="p-4">
+    <div class="max-w-7xl mx-auto space-y-4">
+      <div class="grid grid-cols-4 gap-4">
+        <div class="grid-col-span-3">
+          <h1>{{ movie.title }}</h1>
+
+          <p class="text-white/75">{{ movie.synopsis }}</p>
+        </div>
+
+        <div class="max-w-sm rounded-lg overflow-hidden">
+          <img
+            class="w-full"
+            :src="`https://uecmovies.com${movie.poster}`"
+            :alt="`${movie.title} poster`"
+          />
+        </div>
+      </div>
+
+      <div
+        ref="trailer"
+        class="aspect-video relative border-1.5 border-gray-800 rounded-xl overflow-hidden grid place-items-center"
+      >
+        <svg
+          class="absolute z-1 inset-0 h-full w-full stroke-white/15"
+          fill="none"
+        >
+          <defs>
+            <pattern
+              id="pattern"
+              x="0"
+              y="0"
+              width="10"
+              height="10"
+              patternUnits="userSpaceOnUse"
+            >
+              <path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3"></path>
+            </pattern>
+          </defs>
+          <rect
+            stroke="none"
+            fill="url(#pattern)"
+            width="100%"
+            height="100%"
+          ></rect>
+        </svg>
+
+        <PhVideo class="text-white/50" size="64" weight="thin" />
+
+        <iframe
+          v-if="width > 0"
+          class="z-2 absolute"
+          :src="movie.embed"
+          :width="width"
+          :height="height"
+          frameborder="0"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</template>

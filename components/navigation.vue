@@ -23,7 +23,7 @@ const links = [
 
 <template>
   <nav
-    class="sticky top-0 left-0 w-full bg-black/75 backdrop-blur-lg z-50 whitespace-nowrap border-b border-white/5 px-4 max-w-screen overflow-hidden"
+    class="sticky top-0 left-0 w-full bg-black/75 backdrop-blur-lg z-50 whitespace-nowrap border-b border-white/10 px-4 max-w-screen overflow-hidden"
   >
     <div class="h-30 max-w-7xl mx-auto flex items-center justify-between">
       <nuxt-link to="/" class="h-full aspect-square grid place-items-center">
@@ -69,5 +69,5 @@ const links = [
     </div>
   </nav>
 
-  <set-theatre />
+  <!-- <set-theatre /> -->
 </template>

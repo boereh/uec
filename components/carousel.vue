@@ -35,7 +35,7 @@ watch(scroll_left, (v) => {
 
 <template>
   <div class="px-4">
-    <div class="max-w-7xl mx-auto relative pb-4">
+    <div class="">
       <component :is="small_screen ? 'h3' : 'h1'" class="md:py-4">
         {{ label }}
       </component>
