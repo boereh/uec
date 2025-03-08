@@ -15,10 +15,24 @@ export default defineEventHandler(async (event) => {
     ".videoSlide > iframe"
   )?.src;
 
+  const fields = [...dom.querySelectorAll<HTMLSpanElement>(".movie-info-field")]
+    .map((field) => {
+      const label = field.querySelector("label")?.getAttribute("for");
+      const texts = field.textContent?.split("\n");
+
+      if (!texts) return;
+      if (field.classList.contains("bold")) return ["Genre", texts[1].trim()];
+      if (!label) return;
+
+      return [label, texts[2].trim()];
+    })
+    .filter((field) => field !== undefined);
+
   return {
     title,
     poster,
     synopsis,
     embed,
+    fields: Object.fromEntries(fields),
   };
 });

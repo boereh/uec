@@ -12,10 +12,25 @@ const { data: movie } = useFetch(`/api/movies/${route.params.id}`);
   <div v-if="movie" class="p-4">
     <div class="max-w-7xl mx-auto space-y-4">
       <div class="grid grid-cols-4 gap-4">
-        <div class="grid-col-span-3">
+        <div class="grid-col-span-3 flex flex-col gap-2">
           <h1>{{ movie.title }}</h1>
 
           <p class="text-white/75">{{ movie.synopsis }}</p>
+
+          <div
+            v-for="field of Object.entries((movie as any).fields)"
+            :key="field[0]"
+          >
+            <span class="text-gray-500 tracking-wider uppercase font-bold">
+              {{ field[0] }}
+            </span>
+
+            <span class="text-gray-500"> — </span>
+
+            <span>
+              {{ field[1] }}
+            </span>
+          </div>
         </div>
 
         <div class="max-w-sm rounded-lg overflow-hidden">
