@@ -11,29 +11,42 @@ const { data: movie } = useFetch(`/api/movies/${route.params.id}`);
 <template>
   <div v-if="movie" class="p-4">
     <div class="max-w-7xl mx-auto space-y-4">
-      <div class="grid grid-cols-4 gap-4">
+      <div class="grid grid-cols-4 gap-4 <md:(block)">
         <div class="grid-col-span-3 flex flex-col gap-2">
-          <h1>{{ movie.title }}</h1>
+          <h1 class="text-md">{{ movie.title }}</h1>
 
           <p class="text-white/75">{{ movie.synopsis }}</p>
 
-          <div
-            v-for="field of Object.entries((movie as any).fields)"
-            :key="field[0]"
-          >
-            <span class="text-gray-500 tracking-wider uppercase font-bold">
-              {{ field[0] }}
-            </span>
+          <div class="space-y-2">
+            <div
+              class="max-w-2/5 float-right rounded-lg overflow-hidden md:(hidden)"
+            >
+              <img
+                class="w-full"
+                :src="`https://uecmovies.com${movie.poster}`"
+                :alt="`${movie.title} poster`"
+              />
+            </div>
 
-            <span class="text-gray-500"> — </span>
+            <div
+              v-for="field of Object.entries((movie as any).fields)"
+              :key="field[0]"
+              class="<md:(flex flex-col)"
+            >
+              <span class="text-gray-500 tracking-wider uppercase font-bold">
+                {{ field[0] }}
+              </span>
 
-            <span>
-              {{ field[1] }}
-            </span>
+              <span class="text-gray-500 <md:(hidden)"> — </span>
+
+              <span>
+                {{ field[1] }}
+              </span>
+            </div>
           </div>
         </div>
 
-        <div class="max-w-sm rounded-lg overflow-hidden">
+        <div class="max-w-sm rounded-lg overflow-hidden <md:(hidden)">
           <img
             class="w-full"
             :src="`https://uecmovies.com${movie.poster}`"

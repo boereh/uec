@@ -26,25 +26,29 @@ const current_tab = ref(tabs[0]);
 <template>
   <div class="p-4">
     <div class="max-w-7xl mx-auto">
-      <div class="flex gap-2 whitespace-nowrap">
+      <div class="flex gap-2 whitespace-nowrap max-w-full overflow-x-auto">
         <button
           v-for="tab of tabs"
           :key="tab.label"
           :class="[
-            'flex items-center gap-2 transition px-2 h-10 rounded-md duration-300',
+            'flex items-center gap-2 transition px-2 h-10 <md:(h-8 text-sm) rounded-md duration-300',
             current_tab.label === tab.label
               ? 'bg-brand-red'
-              : 'text-white/75 hover:bg-white/15',
+              : 'text-white/75 hover:bg-white/15 <md:(bg-gray-900)',
           ]"
           @click="current_tab = tab"
         >
-          <component :is="tab.icon" size="24" />
+          <component :is="tab.icon" size="24" class="" />
 
-          {{ tab.label }}
+          <span
+            :class="[current_tab.label === tab.label ? '' : '<md:(hidden)']"
+          >
+            {{ tab.label }}
+          </span>
         </button>
       </div>
 
-      <div class="grid grid-cols-7 gap-4 py-4">
+      <div class="grid grid-cols-7 <md:grid-cols-3 gap-4 py-4">
         <nuxt-link
           v-for="movie of current_tab.movies.toSorted((a, b) =>
             a.title.localeCompare(b.title)

@@ -25,12 +25,17 @@ const links = [
   <nav
     class="sticky top-0 left-0 w-full bg-black/75 backdrop-blur-lg z-50 whitespace-nowrap border-b border-zinc-900 px-4 max-w-screen overflow-hidden"
   >
-    <div class="h-30 max-w-7xl mx-auto flex items-center justify-between">
-      <nuxt-link to="/" class="h-full aspect-square grid place-items-center">
-        <svg-logo class="h-2/3 w-full" />
+    <div
+      class="h-30 max-w-7xl mx-auto flex items-center justify-between <sm:(h-20)"
+    >
+      <nuxt-link
+        to="/"
+        class="h-full w-20 <sm:(w-14) flex items-center justify-start"
+      >
+        <svg-logo class="aspect-square w-full" />
       </nuxt-link>
 
-      <div class="h-full grid grid-rows-2">
+      <div class="h-full grid grid-rows-2 <md:hidden">
         <div class="flex items-center justify-end gap-8">
           <nuxt-link
             to="/account"
