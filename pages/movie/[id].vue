@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useElementBounding } from "@vueuse/core";
-import { PhVideo } from "@phosphor-icons/vue";
+import { IconVideo } from "@tabler/icons-vue";
 
 const trailer_el = useTemplateRef("trailer");
 const { width, height } = useElementBounding(trailer_el);
@@ -29,10 +29,10 @@ const { data: movie } = useFetch(`/api/movies/${route.params.id}`);
 
       <div
         ref="trailer"
-        class="aspect-video relative border-1.5 border-gray-800 rounded-xl overflow-hidden grid place-items-center"
+        class="aspect-video relative border-1.5 border-zinc-800 rounded-xl overflow-hidden grid place-items-center"
       >
         <svg
-          class="absolute z-1 inset-0 h-full w-full stroke-white/15"
+          class="absolute z-1 inset-0 h-full w-full stroke-zinc-900"
           fill="none"
         >
           <defs>
@@ -55,11 +55,15 @@ const { data: movie } = useFetch(`/api/movies/${route.params.id}`);
           ></rect>
         </svg>
 
-        <PhVideo class="text-white/50" size="64" weight="thin" />
+        <div
+          class="p-4 bg-black absolute z-2 rounded-xl border border-zinc-900"
+        >
+          <IconVideo class="text-zinc-700" size="32" weight="thin" />
+        </div>
 
         <iframe
           v-if="width > 0"
-          class="z-2 absolute"
+          class="z-3 absolute"
           :src="movie.embed"
           :width="width"
           :height="height"

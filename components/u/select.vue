@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhCaretDown } from "@phosphor-icons/vue";
+import { IconCaretDown } from "@tabler/icons-vue";
 import {
   useElementBounding,
   onClickOutside,
@@ -61,7 +61,7 @@ function setValue(option: string) {
         {{ value || placeholder }}
       </span>
 
-      <PhCaretDown />
+      <IconCaretDown />
     </button>
 
     <div

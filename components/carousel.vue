@@ -5,7 +5,7 @@ import {
   useScroll,
   useElementSize,
 } from "@vueuse/core";
-import { PhCaretLeft, PhCaretRight } from "@phosphor-icons/vue";
+
 type Props = {
   movies: Array<{
     title: string;

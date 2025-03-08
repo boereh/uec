@@ -2,7 +2,7 @@
 import theatres from "assets/scripts/theatres";
 import Select from "primevue/select";
 import Button from "primevue/button";
-import { PhUser } from "@phosphor-icons/vue";
+import { IconUser } from "@tabler/icons-vue";
 const theatre = useTheatre();
 const small_width = useReponsive().smaller("md");
 </script>
@@ -24,7 +24,7 @@ const small_width = useReponsive().smaller("md");
       to="/login"
       class="w-60 h-10 flex gap-2 justify-center items-center hover:underline"
     >
-      <PhUser class="size-5" />
+      <IconUser class="size-5" />
       Login to myUEC
     </nuxt-link>
   </div>

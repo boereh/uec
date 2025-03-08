@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { PhTimer, PhFilmStrip, PhCalendarStar } from "@phosphor-icons/vue";
+import { IconClock, IconMovie, IconCalendar } from "@tabler/icons-vue";
 const { data: movies } = await useFetch("/api/movies");
 
 const tabs = [
   {
     label: "Now Playing",
     movies: movies?.value?.playing || [],
-    icon: PhFilmStrip,
+    icon: IconMovie,
   },
   {
     label: "Coming Soon",
     movies: movies?.value?.coming || [],
-    icon: PhTimer,
+    icon: IconClock,
   },
   {
     label: "Special Event",
     movies: movies?.value?.special || [],
-    icon: PhCalendarStar,
+    icon: IconCalendar,
   },
 ];
 

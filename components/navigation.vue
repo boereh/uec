@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhIdentificationBadge, PhPopcorn, PhAt } from "@phosphor-icons/vue";
+import { IconId, IconMapPin, IconAt } from "@tabler/icons-vue";
 import theatres from "assets/scripts/theatres";
 const links = [
   {
@@ -23,7 +23,7 @@ const links = [
 
 <template>
   <nav
-    class="sticky top-0 left-0 w-full bg-black/75 backdrop-blur-lg z-50 whitespace-nowrap border-b border-white/10 px-4 max-w-screen overflow-hidden"
+    class="sticky top-0 left-0 w-full bg-black/75 backdrop-blur-lg z-50 whitespace-nowrap border-b border-zinc-900 px-4 max-w-screen overflow-hidden"
   >
     <div class="h-30 max-w-7xl mx-auto flex items-center justify-between">
       <nuxt-link to="/" class="h-full aspect-square grid place-items-center">
@@ -36,7 +36,7 @@ const links = [
             to="/account"
             class="flex items-center gap-1 underline underline-transparent transition hover:underline-white"
           >
-            <PhIdentificationBadge class="size-6 text-white" weight="fill" />
+            <IconId class="size-6 text-white" weight="fill" />
 
             myUEC
           </nuxt-link>
@@ -45,7 +45,7 @@ const links = [
             to="/theatres"
             class="flex items-center gap-1 underline underline-transparent transition hover:underline-white"
           >
-            <PhPopcorn class="size-6 text-white" weight="fill" />
+            <IconMapPin class="size-6 text-white" weight="fill" />
 
             No Theatre Selected
           </nuxt-link>
