@@ -48,7 +48,7 @@ const current_tab = ref(tabs[0]);
         </button>
       </div>
 
-      <div class="grid grid-cols-7 <md:grid-cols-3 gap-4 py-4">
+      <div class="grid grid-cols-7 <xl:grid-cols-5 <md:grid-cols-3 gap-4 py-4">
         <nuxt-link
           v-for="movie of current_tab.movies.toSorted((a, b) =>
             a.title.localeCompare(b.title)
@@ -63,7 +63,7 @@ const current_tab = ref(tabs[0]);
 
           <span
             v-if="movie.title.includes('Mega Screen')"
-            class="absolute top-2 right-0 bg-brand-red/75 backdrop-blur-md p-1 rounded-l-md text-sm"
+            class="absolute top-2 right-0 bg-brand-red/75 backdrop-blur-md <md:text-xs p-1 rounded-l-md text-sm"
           >
             Mega Screen
           </span>

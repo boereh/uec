@@ -1,34 +1,34 @@
 <script setup lang="ts">
 type Props = {
-  value?: string
-  block?: boolean
-  placeholder?: string
-  type?: string
-  iconRight?: string
-  iconRightClass?: string | string[]
-  iconRightButtonClass?: string | string[]
-  iconLeft?: string
-  iconLeftClass?: string | string[]
-  inputBind?: any
-}
+  value?: string;
+  block?: boolean;
+  placeholder?: string;
+  type?: string;
+  iconRight?: string;
+  iconRightClass?: string | string[];
+  iconRightButtonClass?: string | string[];
+  iconLeft?: string;
+  iconLeftClass?: string | string[];
+  inputBind?: any;
+};
 
-const props = defineProps<Props>()
-const emit = defineEmits(['update:value', 'click:iconRight', 'click:iconLeft'])
+const props = defineProps<Props>();
+const emit = defineEmits(["update:value", "click:iconRight", "click:iconLeft"]);
 
 function Updated(target: EventTarget | null) {
-  if (!target) return
+  if (!target) return;
 
-  emit('update:value', (target as HTMLInputElement).value.trim())
+  emit("update:value", (target as HTMLInputElement).value.trim());
 }
 </script>
 
 <template>
-  <div :class="['h-8', block ? '' : 'w-full flex h-8']">
+  <div :class="['h-10', block ? '' : 'w-full']">
     <input
       :value="value"
       v-bind="inputBind"
       :class="[
-        'h-8 px-2 border w-full transition-default',
+        'h-10 px-2 border w-full transition-default flex-grow',
         'dark:text-white placeholder:dark:text-white/50 bg-transparent outline-none',
         'border-light-900 dark:border-dark-300 hover:border-brand-red focus:border-brand-red',
         !iconRight && 'rounded-r-md',
@@ -45,10 +45,7 @@ function Updated(target: EventTarget | null) {
       :class="iconRightButtonClass"
       @click="$emit('click:iconRight', $event)"
     >
-      <icon
-        :name="iconRight"
-        :class="iconRightClass"
-      />
+      <icon :name="iconRight" :class="iconRightClass" />
     </button>
   </div>
 </template>

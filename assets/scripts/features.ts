@@ -35,7 +35,7 @@ export default [
   {
     src: "https://www.uecmovies.com/Content/assets/gallery/[cache]/b5a4729e-ee84-4d5a-8531-f22a5e7a21d5.png",
     title: "3D",
-    render: [{ type: "text", text: "3D" }],
+    render: [{ type: "icon", name: "tabler:badge-3d-filled" }],
   },
   {
     src: "https://www.uecmovies.com/Content/assets/gallery/[cache]/48e38296-2d9e-416c-ac93-5db36c90f083.png",
@@ -65,7 +65,7 @@ export default [
   {
     src: "https://www.uecmovies.com/Content/assets/gallery/[cache]/e2c90380-e8e9-4382-8f10-410e125e8c89.png",
     title: "Video Games",
-    render: [{ type: "text", text: "VIDEO GAMES" }],
+    render: [{ type: "icon", name: "tabler:device-gamepad" }],
   },
   {
     src: "https://www.uecmovies.com/Content/assets/gallery/[cache]/e5fb1ac4-ffda-4a1e-842d-b0eea01e35ff.png",
