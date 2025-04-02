@@ -2,7 +2,7 @@ import { drizzle } from "#utils/database";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import tz from "dayjs/plugin/timezone";
-import Theatres from "assets/scripts/theatres";
+import Theatres from "~/assets/scripts/theatres";
 import { and, eq, gte } from "drizzle-orm";
 
 dayjs.extend(utc);

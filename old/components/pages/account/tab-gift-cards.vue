@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import states from "assets/scripts/theatres";
+import states from "~/assets/scripts/theatres";
 import type { RuleFn } from "~/assets/scripts/types/form";
 
 type EditForm = {

@@ -1,8 +1,8 @@
 import { watchDebounced } from "@vueuse/core";
-import { Card } from "assets/scripts/types/account";
-import { Theatre } from "assets/scripts/types/uec";
+import { Card } from "~/assets/scripts/types/account";
+import { Theatre } from "~/assets/scripts/types/uec";
 import dayjs from "dayjs";
-import theatres from "assets/scripts/theatres";
+import theatres from "~/assets/scripts/theatres";
 
 const useLoyaltyCardskey = "uec-loyalty-rewards-cards";
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import theatreJSON from "assets/scripts/theatres";
+import theatreJSON from "~/assets/scripts/theatres";
 
 const form = reactive({
   type: "",

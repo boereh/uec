@@ -4,7 +4,7 @@ import {
   useWindowSize,
   usePreferredColorScheme,
 } from "@vueuse/core";
-import Theatres from "assets/scripts/theatres";
+import Theatres from "~/assets/scripts/theatres";
 
 const links = [
   {

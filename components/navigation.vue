@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IconId, IconMapPin, IconMenu2 } from "@tabler/icons-vue";
-import theatres from "assets/scripts/theatres";
+import theatres from "~/assets/scripts/theatres";
 const links = [
   {
     to: "/loyalty-rewards",
@@ -84,7 +84,7 @@ watch(menu_open, (v) => (document.body.style.overflow = v ? "hidden" : "auto"));
 
   <div
     :class="[
-      'fixed inset-0 z-50 flex justify-end',
+      'fixed inset-0 z-50 flex justify-end md:hidden',
       menu_open ? 'bg-black/50' : 'pointer-events-none',
     ]"
     @click.self="menu_open = false"

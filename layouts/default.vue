@@ -7,7 +7,9 @@ import { Analytics } from "@vercel/analytics/nuxt";
   <Analytics />
   <navigation />
 
-  <slot />
+  <keep-alive>
+    <slot />
+  </keep-alive>
 </template>
 
 <style>

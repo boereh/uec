@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import theatres from "assets/scripts/theatres";
+import theatres from "~/assets/scripts/theatres";
 const enabled = defineModel<boolean>("enabled", { default: false });
 const value = ref("");
 </script>

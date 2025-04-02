@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IconMapSearch, IconPhone } from "@tabler/icons-vue";
-import theatres from "assets/scripts/theatres";
-import features from "assets/scripts/features";
+import theatres from "~/assets/scripts/theatres";
+import features from "~/assets/scripts/features";
 
 const route = useRoute();
 const router = useRouter();

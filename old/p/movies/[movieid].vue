@@ -1,138 +1,163 @@
 <script setup lang="ts">
-import { useBreakpoints, breakpointsTailwind, whenever, useLocalStorage, watchOnce, watchDebounced, useDark, useElementSize } from '@vueuse/core'
-import dayjs, { type Dayjs } from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import tz from 'dayjs/plugin/timezone'
-import type { Movie } from 'assets/scripts/types/movies'
+import {
+  useBreakpoints,
+  breakpointsTailwind,
+  whenever,
+  useLocalStorage,
+  watchOnce,
+  watchDebounced,
+  useDark,
+  useElementSize,
+} from "@vueuse/core";
+import dayjs, { type Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import tz from "dayjs/plugin/timezone";
+import type { Movie } from "~/assets/scripts/types/movies";
 
-dayjs.extend(utc)
-dayjs.extend(tz)
+dayjs.extend(utc);
+dayjs.extend(tz);
 
 type Showing = {
-  id: number
-  time: number
-  date: string
-}
+  id: number;
+  time: number;
+  date: string;
+};
 
 type Showings = {
-  list: Showing[]
-  filtered: Showing[]
-  date: Dayjs
-  options: Dayjs[]
-}
+  list: Showing[];
+  filtered: Showing[];
+  date: Dayjs;
+  options: Dayjs[];
+};
 
-const theatre = useTheatre()
-const posterEl = ref()
-const { height } = useElementSize(posterEl)
-const route = useRoute()
-const router = useRouter()
-const breakpoints = useBreakpoints(breakpointsTailwind)
-const isDeviceSmall = breakpoints.smallerOrEqual('md')
-const trailerEnabled = ref(false)
+const theatre = useTheatre();
+const posterEl = ref();
+const { height } = useElementSize(posterEl);
+const route = useRoute();
+const router = useRouter();
+const breakpoints = useBreakpoints(breakpointsTailwind);
+const isDeviceSmall = breakpoints.smallerOrEqual("md");
+const trailerEnabled = ref(false);
 const showings = reactive<Showings>({
   list: [],
   filtered: [],
-  date: dayjs().startOf('day'),
+  date: dayjs().startOf("day"),
   options: [],
-})
+});
 
-const { data: movie, error } = useFetch<Movie>(() => `/api/movies/${route.params.movieid}`, {
-  method: 'POST',
-})
+const { data: movie, error } = useFetch<Movie>(
+  () => `/api/movies/${route.params.movieid}`,
+  {
+    method: "POST",
+  }
+);
 
 const metadatas = computed(() => {
   return [
     {
-      text: 'Released date',
-      value: dayjs(movie.value?.released).format('MMMM DD, YYYY'),
+      text: "Released date",
+      value: dayjs(movie.value?.released).format("MMMM DD, YYYY"),
     },
     {
-      text: 'Runtime',
+      text: "Runtime",
       value: `${movie.value?.runtime} minutes`,
     },
     {
-      text: 'MPAA Rating',
+      text: "MPAA Rating",
       value: `${movie.value?.mpaa}`,
     },
     {
-      text: 'Actors',
-      value: `${movie.value?.actors.join(', ')}`,
+      text: "Actors",
+      value: `${movie.value?.actors.join(", ")}`,
     },
     {
-      text: 'Director',
+      text: "Director",
       value: movie.value?.director,
     },
     {
-      text: 'Genre',
-      value: `${movie.value?.genre.join(', ')}`,
+      text: "Genre",
+      value: `${movie.value?.genre.join(", ")}`,
     },
     {
-      text: 'Special event',
-      value: movie.value?.special ? 'Special' : 'N/A',
+      text: "Special event",
+      value: movie.value?.special ? "Special" : "N/A",
     },
-  ]
-})
+  ];
+});
 
-if (error.value) router.replace('/404')
+if (error.value) router.replace("/404");
 
 useHead({
-  script: [{ src: 'https://www.youtube.com/iframe_api' }],
-})
+  script: [{ src: "https://www.youtube.com/iframe_api" }],
+});
 
 whenever(
   movie,
   async ({ title, id }) => {
     useHead({
       title: `${title} - UEC Theatres`,
-    })
+    });
 
-    if (!theatre.value) return
+    if (!theatre.value) return;
 
-    const { data, status } = await useFetch<Showing[]>(`/api/movies/${id}/showings`, {
-      body: dayjs().startOf('day').toISOString(),
-      method: 'POST',
-    })
+    const { data, status } = await useFetch<Showing[]>(
+      `/api/movies/${id}/showings`,
+      {
+        body: dayjs().startOf("day").toISOString(),
+        method: "POST",
+      }
+    );
 
     watchOnce(data, (list) => {
-      showings.list = list || []
+      showings.list = list || [];
 
-      if (!theatre.value) return
+      if (!theatre.value) return;
 
-      const options: Record<string, Dayjs> = {}
+      const options: Record<string, Dayjs> = {};
 
       for (const showing of showings.list) {
-        const date = dayjs.tz(showing.date, theatre.value.timezone).startOf('day')
+        const date = dayjs
+          .tz(showing.date, theatre.value.timezone)
+          .startOf("day");
 
-        if (options[date.toISOString()]) continue
+        if (options[date.toISOString()]) continue;
 
-        options[date.toISOString()] = date
+        options[date.toISOString()] = date;
       }
 
-      showings.options = Object.values(options).sort((a, b) => a.unix() - b.unix())
-    })
+      showings.options = Object.values(options).sort(
+        (a, b) => a.unix() - b.unix()
+      );
+    });
   },
   { immediate: true }
-)
+);
 
 watchDebounced(
-  toRef(showings, 'date'),
+  toRef(showings, "date"),
   (day) => {
-    if (!showings.date) return (showings.filtered = [])
-    const d = day.startOf('day').toISOString()
+    if (!showings.date) return (showings.filtered = []);
+    const d = day.startOf("day").toISOString();
 
-    showings.filtered = showings.list.filter(({ date }) => d === dayjs.tz(date, theatre.value?.timezone).startOf('day').toISOString())
+    showings.filtered = showings.list.filter(
+      ({ date }) =>
+        d ===
+        dayjs.tz(date, theatre.value?.timezone).startOf("day").toISOString()
+    );
   },
   {
     debounce: 50,
     immediate: true,
   }
-)
+);
 </script>
 
 <template>
   <u-container class="overflow-hidden">
     <div :style="{ minHeight: `calc(${height}px + 2rem)` }">
-      <div class="flex justify-center md:float-left mb-8 md:mr-8 relative overscroll-contain">
+      <div
+        class="flex justify-center md:float-left mb-8 md:mr-8 relative overscroll-contain"
+      >
         <img
           ref="posterEl"
           class="min-w-xs max-w-xs aspect-intial"
@@ -152,7 +177,9 @@ watchDebounced(
         <div class="flex gap-4 items-start">
           <h1 class="m-0">{{ movie?.title }}</h1>
 
-          <span class="noto-serif text-white bg-black dark:bg-white dark:text-black font-bold px-1 rounded select-none whitespace-nowrap mt-2 <sm:mt-3">
+          <span
+            class="noto-serif text-white bg-black dark:bg-white dark:text-black font-bold px-1 rounded select-none whitespace-nowrap mt-2 <sm:mt-3"
+          >
             {{ movie?.mpaa }}
           </span>
         </div>
@@ -205,17 +232,18 @@ watchDebounced(
 
     <br />
 
-    <div
-      v-if="showings.options.length > 0"
-      class="flex gap-2"
-    >
+    <div v-if="showings.options.length > 0" class="flex gap-2">
       <u-button
         v-for="option of showings.options"
         :key="option.unix()"
         :type="showings.date.unix() === option.unix() ? 'primary' : 'default'"
         @click="showings.date = option"
       >
-        {{ option.format('DD MMM') === dayjs().format('DD MMMM') ? 'Today' : option.format('DD MMM') }}
+        {{
+          option.format("DD MMM") === dayjs().format("DD MMMM")
+            ? "Today"
+            : option.format("DD MMM")
+        }}
       </u-button>
     </div>
 
@@ -231,7 +259,9 @@ watchDebounced(
       >
         <p>You don't have a theatre selected.</p>
 
-        <u-button :href="`/theatres?redirect=/movies/${movie?.id}`">Select a theatre</u-button>
+        <u-button :href="`/theatres?redirect=/movies/${movie?.id}`"
+          >Select a theatre</u-button
+        >
       </div>
 
       <div

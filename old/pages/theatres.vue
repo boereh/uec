@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useLocalStorage } from "@vueuse/core";
 import features from "assets/json/features.json";
-import theatres from "assets/scripts/theatres";
+import theatres from "~/assets/scripts/theatres";
 import { UButton } from "#components";
 
 const route = useRoute();

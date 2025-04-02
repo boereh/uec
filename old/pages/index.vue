@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useLocalStorage, useMounted, watchDebounced } from "@vueuse/core";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import Theatres from "assets/scripts/theatres";
+import Theatres from "~/assets/scripts/theatres";
 import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import tz from "dayjs/plugin/timezone";

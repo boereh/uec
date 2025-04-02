@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import theatresJSON from "assets/scripts/theatres";
-import statesJSON from "assets/scripts/theatres";
+import theatresJSON from "~/assets/scripts/theatres";
+import statesJSON from "~/assets/scripts/theatres";
 
 const theatres = theatresJSON.map((x) => ({
   ...x,

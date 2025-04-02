@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDark, watchDebounced } from "@vueuse/core";
-import states from "assets/scripts/theatres";
+import states from "~/assets/scripts/theatres";
 
 const informationForm = reactive({
   first_name: "",

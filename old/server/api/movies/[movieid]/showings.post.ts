@@ -5,7 +5,7 @@ import { eq, gte, and } from "drizzle-orm";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import tz from "dayjs/plugin/timezone";
-import Theatres from "assets/scripts/theatres";
+import Theatres from "~/assets/scripts/theatres";
 
 dayjs.extend(utc);
 dayjs.extend(tz);
